@@ -1,0 +1,8 @@
+models/
+.env
+testing images/
+*.png
+*.jpg
+*.JPG
+__pycache__/
+inventory data/

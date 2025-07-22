@@ -1,0 +1,32 @@
+models:
+  qr_model: "./models/qr_detection.pt"
+  container_model: "./models/box_detection.pt"
+  boundary_model: "./models/Bar_Detection_M.pt"
+
+bars:
+  vertical: 1
+  horizontal: 0
+
+rack_infer_func:
+  path: "package/infer functions/mahindra_infer_func.py"
+
+input:
+  image_dir: "./testing images/images/mahindra"
+
+# pattern:
+#   rack_id: "^HD-(\\d{2})/([A-Z])/((0[1-9])|(1[0-9])|(2[0-9])|(3[0-8]))$"
+
+rack_id:
+  pattern: "^HD-(\\d{2})/([A-Z])/((0[1-9])|(1[0-9])|(2[0-9])|(3[0-8]))$"
+  expected_length: 10
+
+thresholds:
+  boundary_model:
+    confidence_threshold: 0.2
+    merge_threshold: 50
+
+  box_model:
+    confidence_threshold: 0.2
+  
+  ocr_threshold:
+    area_threshold: 5000

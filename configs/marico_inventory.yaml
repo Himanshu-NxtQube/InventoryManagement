@@ -1,0 +1,40 @@
+models:
+  container_model: "./models/new_pallet_best.pt"
+  pallet_status_model: "./models/pallet_status_model.pt"
+  box_model: "./models/marico_box.pt"
+  boundary_model: "./models/boundary_model.pt"
+
+bars:
+  vertical: 0
+  horizontal: 1
+
+rack_infer_func:
+  path: "package/infer functions/marico_infer_func.py"
+
+# pattern:
+#   rack_id: '^[A-Z]{2}[-\s]?[0-9]{3}$'
+
+rack_id:
+  pattern: '^[A-Z]{2}[-\s]?[0-9]{3}$'
+  expected_length: 5
+
+input:
+  image_dir: "./testing images/images/marico"
+  stack_levels_csv: "./inventory data/marico_inventory_stack_levels.csv"
+
+thresholds:
+  boundary_model:
+    confidence_threshold: 0.5
+    merge_threshold: 50
+
+  box_model:
+    confidence_threshold: 0.5
+  
+  ocr_threshold:
+    area_threshold: 3000
+  
+  pallet_model:
+    distance_threshold: 500
+    confidence_threshold: 0.5
+
+extras: ['pallet_status']
