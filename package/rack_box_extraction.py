@@ -173,27 +173,30 @@ class RackBoxExtractor:
 
         for rack_info in res:
             rack_id = rack_info['rack_id']
+            print("rack id: ", rack_id)
             text_center_x, text_center_y = rack_info['center']
             text_area = rack_info['area']
             
             if (left_line_x < text_center_x < right_line_x) and text_area > self.area_threshold:
                 # print("Rack id:", rack_id, "Area:", text_area)
+                dist = (abs(text_center_x - self.center_x)**2 + abs(text_center_y - self.center_y)**2)**0.5
+
                 if text_center_x < self.center_x:
-                    left_rack_ids.append((rack_id, text_center_y))
+                    left_rack_ids.append((rack_id, text_center_y, dist))
                 else:
-                    right_rack_ids.append((rack_id, text_center_y))
+                    right_rack_ids.append((rack_id, text_center_y, dist))
 
-        for rack_id, text_center_y in left_rack_ids:
+        for rack_id, text_center_y, dist in left_rack_ids:
             if text_center_y < self.center_y:
-                Q2_rack_ids.append((rack_id, text_center_y))
+                Q2_rack_ids.append((rack_id, text_center_y, dist))
             else:
-                Q3_rack_ids.append((rack_id, text_center_y))
+                Q3_rack_ids.append((rack_id, text_center_y, dist))
 
-        for rack_id, text_center_y in right_rack_ids:
+        for rack_id, text_center_y, dist in right_rack_ids:
             if text_center_y < self.center_y:
-                Q1_rack_ids.append((rack_id, text_center_y))
+                Q1_rack_ids.append((rack_id, text_center_y, dist))
             else:
-                Q4_rack_ids.append((rack_id, text_center_y))
+                Q4_rack_ids.append((rack_id, text_center_y, dist))
 
         # Q1_rack_id = (min(Q1_rack_ids, key=lambda x:x[1])[0], 'Q1') if Q1_rack_ids else None
         # Q2_rack_id = (min(Q2_rack_ids, key=lambda x:x[1])[0], 'Q2') if Q2_rack_ids else None
@@ -201,7 +204,7 @@ class RackBoxExtractor:
         # Q4_rack_id = (max(Q4_rack_ids, key=lambda x:x[1])[0], 'Q4') if Q4_rack_ids else None
         # Q1 & Q2
         if Q1_rack_ids:
-            q1_best = min(Q1_rack_ids, key=lambda x: x[1])
+            q1_best = min(Q1_rack_ids, key=lambda x: x[2])
             # Q1_rack_id = (q1_best[0], 'Q1')
             rack_dict['Q1'] = q1_best[0]
             Q1_min_value = q1_best[1]
@@ -210,7 +213,7 @@ class RackBoxExtractor:
             Q1_min_value = None
 
         if Q2_rack_ids:
-            q2_best = min(Q2_rack_ids, key=lambda x: x[1])
+            q2_best = min(Q2_rack_ids, key=lambda x: x[2])
             # Q2_rack_id = (q2_best[0], 'Q2')
             rack_dict['Q2'] = q2_best[0]
             Q2_min_value = q2_best[1]
@@ -226,7 +229,7 @@ class RackBoxExtractor:
 
         # Q3 & Q4
         if Q3_rack_ids:
-            q3_best = max(Q3_rack_ids, key=lambda x: x[1])
+            q3_best = min(Q3_rack_ids, key=lambda x: x[2])
             # Q3_rack_id = (q3_best[0], 'Q3')
             rack_dict['Q3'] = q3_best[0]
             Q3_max_value = q3_best[1]
@@ -235,7 +238,7 @@ class RackBoxExtractor:
             Q3_max_value = None
 
         if Q4_rack_ids:
-            q4_best = max(Q4_rack_ids, key=lambda x: x[1])
+            q4_best = min(Q4_rack_ids, key=lambda x: x[2])
             # Q4_rack_id = (q4_best[0], 'Q4')
             rack_dict['Q4'] = q4_best[0]
             Q4_max_value = q4_best[1]

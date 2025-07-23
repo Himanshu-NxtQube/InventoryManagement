@@ -103,8 +103,8 @@ def process_single_image(image_path):
 
 
 def main():
-    image_directory = CONFIG['input']['image_dir']
-    # image_directory = CONFIG['input']['debug_image_dir']
+    # image_directory = CONFIG['input']['image_dir']
+    image_directory = CONFIG['input']['debug_image_dir']
 
     image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
 
