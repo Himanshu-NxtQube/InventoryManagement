@@ -48,6 +48,8 @@ class RackBoxExtractor:
                     combined = "@" + next_text
                     if regex.match(self.CONFIG['unique_id']['pattern'], combined):
                         # uids.append((combined.upper(), (center_x, center_y)))
+                        if combined[0] != '@':
+                            combined = '@' + combined[1:]
                         uids[combined.upper()] = (center_x, center_y)
                         i += 2  # skip next, already processed
                         continue
@@ -56,6 +58,8 @@ class RackBoxExtractor:
                 combined = current.replace(" ", "").replace("\n", "").strip()[:7]
                 if regex.match(self.CONFIG['unique_id']['pattern'], combined):
                     # uids.append((combined.upper(), (center_x, center_y)))
+                    if combined[0] != '@':
+                        combined = '@' + combined[1:]
                     uids[combined.upper()] = (center_x, center_y)
 
             i += 1
