@@ -6,40 +6,65 @@ _RACK_RE = re.compile(CONFIG['rack_id']['pattern'])
 
 def infer_Q3_Q4(rack_dict: dict) -> dict:
     # Filter only valid rack ids
-    # rack_dict = {k: v for k, v in rack_dict.items() if _RACK_RE.match(k)}
+    rack_dict = {k: v for k, v in rack_dict.items() if _RACK_RE.match(v)}
     # inv_rack_dict = {v: k for k, v in rack_dict.items()}
 
-    if 'Q1' in rack_dict and 'Q2' in rack_dict:
+    if 'Q1' in rack_dict.keys() and 'Q2' in rack_dict.keys():
         rack_dict['Q4'] = rack_dict['Q1'][:2] + str(int(rack_dict['Q1'][2]) - 1) + rack_dict['Q1'][-2:]
         rack_dict['Q3'] = rack_dict['Q2'][:2] + str(int(rack_dict['Q2'][2]) - 1) + rack_dict['Q2'][-2:]
-
-    elif 'Q1' in rack_dict:
+        
+    elif 'Q1' in rack_dict.keys():
         rack_dict['Q4'] = rack_dict['Q1'][:2] + str(int(rack_dict['Q1'][2]) - 1) + rack_dict['Q1'][-2:]
 
-        letter = rack_dict['Q4'][0]
-        num = int(rack_dict['Q4'][-2:])
-        num = num - 1 if ord(letter) % 2 == 0 else num + 1
-        rack_dict['Q3'] = rack_dict['Q4'][:3] + str(num).zfill(2)
+        if ord(rack_dict['Q4'][0]) % 2 == 0:
+            num = str(int(rack_dict['Q4'][-2:]) - 1)
+            if len(num) == 1:
+                num = '0' + num 
+        else:
+            num = str(int(rack_dict['Q4'][-2:]) + 1)
+            if len(num) == 1:
+                num = '0' + num
 
-    elif 'Q2' in rack_dict:
+        rack_dict['Q3'] = rack_dict['Q4'][:3] + num   
+    elif 'Q2' in rack_dict.keys():
         rack_dict['Q3'] = rack_dict['Q2'][:2] + str(int(rack_dict['Q2'][2]) - 1) + rack_dict['Q2'][-2:]
 
-        letter = rack_dict['Q3'][0]
-        num = int(rack_dict['Q3'][-2:])
-        num = num + 1 if ord(letter) % 2 == 0 else num - 1
-        rack_dict['Q4'] = rack_dict['Q3'][:3] + str(num).zfill(2)
+        if ord(rack_dict['Q3'][0]) % 2 == 0:
+            num = str(int(rack_dict['Q3'][-2:]) + 1)
+            if len(num) == 1:
+                num = '0' + num 
+        else:
+            num = str(int(rack_dict['Q3'][-2:]) - 1)
+            if len(num) == 1:
+                num = '0' + num
+                
+        rack_dict['Q4'] = rack_dict['Q3'][:3] + num  
 
-    if 'Q3' not in rack_dict and 'Q4' in rack_dict:
-        letter = rack_dict['Q4'][0]
-        num = int(rack_dict['Q4'][-2:])
-        num = num - 1 if ord(letter) % 2 == 0 else num + 1
-        rack_dict['Q3'] = rack_dict['Q4'][:3] + str(num).zfill(2)
+    if 'Q3' not in rack_dict.keys():
+        if 'Q4' in rack_dict.keys():
+            if ord(rack_dict['Q4'][0]) % 2 == 0:
+                num = str(int(rack_dict['Q4'][-2:]) - 1)
+                if len(num) == 1:
+                    num = '0' + num 
+            else:
+                num = str(int(rack_dict['Q4'][-2:]) + 1)
+                if len(num) == 1:
+                    num = '0' + num
 
-    if 'Q4' not in rack_dict and 'Q3' in rack_dict:
-        letter = rack_dict['Q3'][0]
-        num = int(rack_dict['Q3'][-2:])
-        num = num + 1 if ord(letter) % 2 == 0 else num - 1
-        rack_dict['Q4'] = rack_dict['Q3'][:3] + str(num).zfill(2)
+            rack_dict['Q3'] = rack_dict['Q4'][:3] + num
+        
+    if 'Q4' not in rack_dict.keys():
+        if 'Q3' in rack_dict.keys():
+            if ord(rack_dict['Q3'][0]) % 2 == 0:
+                num = str(int(rack_dict['Q3'][-2:]) + 1)
+                if len(num) == 1:
+                    num = '0' + num 
+            else:
+                num = str(int(rack_dict['Q3'][-2:]) - 1)
+                if len(num) == 1:
+                    num = '0' + num
+                    
+            rack_dict['Q4'] = rack_dict['Q3'][:3] + num
 
     # return {v: k for k, v in inv_rack_dict.items()}
     return rack_dict

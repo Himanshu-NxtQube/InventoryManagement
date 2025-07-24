@@ -181,9 +181,9 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
         cv2.putText(image, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 5, color, 5)
 
     # Display the result
-    cv2.imshow("Detected Boundaries", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow("Detected Boundaries", image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     # Optionally save the image
     if save_path:
@@ -196,8 +196,8 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 # ============================
 if __name__ == "__main__":
     model_path = "./models/box_detection.pt"
-    image_path = "./testing images/debug/DJI_0143.JPG"
-    confidence = 0.2
+    image_path = "./testing images/debug/DJI_0684.JPG"
+    confidence = 0.9
     merge_dist = 50
     save_output_path = "output_with_boundaries.jpg"
 

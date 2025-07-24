@@ -70,8 +70,8 @@ def process_single_image(image_path):
     rack_dict, box_dict = rack_box_extractor.extract_ocr_info(annotations[1:], boundaries, dims)
 
     # FallBack Mechanism: if upper/lower bars fails then using rack id coordinates
-    upper_line_y = rack_box_extractor.min_y
-    lower_line_y = rack_box_extractor.max_y
+    upper_line_y = int(rack_box_extractor.min_y)
+    lower_line_y = int(rack_box_extractor.max_y)
     boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
 
     # print("\nBefore Rack dict:", rack_dict)
@@ -139,8 +139,8 @@ def main():
             if not image_file.lower().endswith(image_extensions):
                 continue
 
-        image_path = os.path.join(image_directory,image_file)  
-        process_single_image(image_path)
+            image_path = os.path.join(image_directory,image_file)  
+            process_single_image(image_path)
         # break
     
 
