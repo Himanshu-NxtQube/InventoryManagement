@@ -47,8 +47,8 @@ class RecordMapper:
         # sorting containers by y
         containers.sort(key=lambda x:x[1][1])
 
-        print("\nids:",ids)
-        print("\ncontainers:",containers)
+        # print("\nids:",ids)
+        # print("\ncontainers:",containers)
 
         mappings = {}
         mapped_ids = set()
@@ -56,21 +56,24 @@ class RecordMapper:
 
         for i,(bbox, (p_center_x, p_center_y)) in enumerate(containers):
             x1, y1, x2, y2 = bbox
+            # print("\nx1 and x2:", x1, x2)
+            # print("y1 and y2:", y1, y2)
 
             if left_line_x > p_center_x or p_center_x > right_line_x or upper_line_y > p_center_y or p_center_y > lower_line_y:
                 visited_containers.add(bbox)
-                print("skipped this box")
+                # print("skipped this box")
                 continue
             
             for j, (id, (id_center_x, id_center_y)) in enumerate(ids):
                 if id in mapped_ids:
                     continue
-                if x1 < id_center_x < x2 and id_center_y < p_center_y:
+                # print("id:", id)
+                # print("id_center_x:",id_center_x)
+                
+                if x1 < id_center_x < x2 and id_center_y < y2:
                     mappings[id] = (p_center_x, p_center_y)
                     mapped_ids.add(id)
                     visited_containers.add(bbox)
-                elif p_center_y > id_center_y:
-                    break
         
         unmapped_ids = [(id,(id_center_x, id_center_y)) for id,(id_center_x, id_center_y) in ids if id not in mapped_ids]
         
@@ -80,8 +83,8 @@ class RecordMapper:
 
         unmapped_containers = [(p_center_x, p_center_y) for bbox,(p_center_x, p_center_y) in containers if bbox not in visited_containers]
 
-        print("\nmappings:", mappings)
-        print("\nunmapped_containers:", unmapped_containers)
+        # print("\nmappings:", mappings)
+        # print("\nunmapped_containers:", unmapped_containers)
 
         return {"mappings": mappings,
                 "unmapped_containers": unmapped_containers}

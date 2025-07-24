@@ -34,11 +34,13 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
         if p_cx < img_dims[0]/2:
             left_rack = True
             temp_output['RACK_ID'] = rack_dict['Q3']
+            temp_output['EXCLUSION'] = exclusions['left']
             if pallet_status:
                 temp_output['STATUS'] = pallet_status[0]
         else:
             right_rack = True
             temp_output['RACK_ID'] = rack_dict['Q4']
+            temp_output['EXCLUSION'] = exclusions['right']
             if pallet_status:
                 temp_output['STATUS'] = pallet_status[1]
 

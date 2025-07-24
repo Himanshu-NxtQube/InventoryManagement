@@ -61,7 +61,7 @@ def process_single_image(image_path):
     
     # contains ROI
     boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
-    print("boundaries:",boundaries)
+    # print("boundaries:",boundaries)
     
     # dimensions of image
     dims = util.get_image_dimensions(image_path)
@@ -74,18 +74,18 @@ def process_single_image(image_path):
     lower_line_y = rack_box_extractor.max_y
     boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
 
-    print("\nBefore Rack dict:", rack_dict)
+    # print("\nBefore Rack dict:", rack_dict)
 
     # infer missing rack ids
     rack_dict = rack_quad_infer.infer_Q3_Q4(rack_dict)
 
-    print("\nAfter Rack dict:", rack_dict)
+    # print("\nAfter Rack dict:", rack_dict)
 
     # fetch all records
     records = data_fetcher.gather_all_records(box_dict, sys.argv[1])
 
-    print("\nBox dict:", box_dict)
-    print("\nRecords:", records)
+    # print("\nBox dict:", box_dict)
+    # print("\nRecords:", records)
 
     # mapping the records to pallet
     mapping_info = mapper.process(box_dict, container_res, boundaries)
@@ -99,6 +99,7 @@ def process_single_image(image_path):
 
     # get exclusion per rack id (side) 
     exclusions = get_exclusion(mapping_info, img_dims=dims)
+    # print(exclusions)
 
     # print the final json result
     print_json(image_path, dims, rack_dict, records, mapping_info, exclusions, pallet_status)

@@ -37,6 +37,15 @@ class RackBoxExtractor:
             x1, y1, x2, y2 = int(bbox[0][0]), int(bbox[0][1]), int(bbox[2][0]), int(bbox[2][1])
             center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2
 
+            x_coords = [x for x, _ in bbox]
+            y_coords = [y for _, y in bbox]
+            x_min, x_max = min(x_coords), max(x_coords)
+            y_min, y_max = min(y_coords), max(y_coords)
+
+            width = x_max - x_min
+            height = y_max - y_min
+            area = width * height
+
             
             
             
@@ -45,8 +54,21 @@ class RackBoxExtractor:
                 # print("Annotation:",current)
                 if current == "@" and i + 1 < len(annotations):
                     next_text = annotations[i + 1].description.strip()[:6]
+                    bbox = [(v.x, v.y) for v in annotations[i].bounding_poly.vertices]
+                    x1, y1, x2, y2 = int(bbox[0][0]), int(bbox[0][1]), int(bbox[2][0]), int(bbox[2][1])
+                    center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2
+
+                    x_coords = [x for x, _ in bbox]
+                    y_coords = [y for _, y in bbox]
+                    x_min, x_max = min(x_coords), max(x_coords)
+                    y_min, y_max = min(y_coords), max(y_coords)
+
+                    width = x_max - x_min
+                    height = y_max - y_min
+                    area += width * height
                     combined = "@" + next_text
-                    if regex.match(self.CONFIG['unique_id']['pattern'], combined):
+                    if regex.match(self.CONFIG['unique_id']['pattern'], combined) and area > self.CONFIG['unique_id']['area']:
+                        # print(combined, area)
                         # uids.append((combined.upper(), (center_x, center_y)))
                         if combined[0] != '@':
                             combined = '@' + combined[1:]
@@ -173,7 +195,6 @@ class RackBoxExtractor:
 
         for rack_info in res:
             rack_id = rack_info['rack_id']
-            print("rack id: ", rack_id)
             text_center_x, text_center_y = rack_info['center']
             text_area = rack_info['area']
             

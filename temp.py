@@ -196,7 +196,7 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 # ============================
 if __name__ == "__main__":
     model_path = "./models/box_detection.pt"
-    image_path = "./testing images/debug/DJI_0131.JPG"
+    image_path = "./testing images/debug/DJI_0143.JPG"
     confidence = 0.2
     merge_dist = 50
     save_output_path = "output_with_boundaries.jpg"
