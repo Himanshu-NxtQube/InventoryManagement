@@ -22,8 +22,8 @@ class RackBoxExtractor:
 
         # this is a fallback mechanism which prevents getting extra unique ids not in ROI if bar detection fails
         # this overall_min_y and overall_max_y are getting defined in extract_rack_info function, it calculates lowest and highest y coordinate of annotations, which we will help us to set ROI
-        min_y = self.overall_min_y if self.overall_min_y is not None else upper_line_y
-        max_y = self.overall_max_y if self.overall_max_y is not None else lower_line_y
+        self.min_y = self.overall_min_y if self.overall_min_y is not None else upper_line_y
+        self.max_y = self.overall_max_y if self.overall_max_y is not None else lower_line_y
 
         # print("Min_y:",min_y)
         # print("Max_y:",max_y)
@@ -41,7 +41,7 @@ class RackBoxExtractor:
             
             
             # Check if in ROI
-            if left_line_x <= center_x <= right_line_x and max(upper_line_y, min_y) <= center_y <= min(max_y, lower_line_y):
+            if left_line_x <= center_x <= right_line_x and max(upper_line_y, self.min_y) <= center_y <= min(self.max_y, lower_line_y):
                 # print("Annotation:",current)
                 if current == "@" and i + 1 < len(annotations):
                     next_text = annotations[i + 1].description.strip()[:6]

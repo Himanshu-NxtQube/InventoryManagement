@@ -57,8 +57,9 @@ class RecordMapper:
         for i,(bbox, (p_center_x, p_center_y)) in enumerate(containers):
             x1, y1, x2, y2 = bbox
 
-            if left_line_x > p_center_x > right_line_x and upper_line_y > p_center_y > lower_line_y:
+            if left_line_x > p_center_x or p_center_x > right_line_x or upper_line_y > p_center_y or p_center_y > lower_line_y:
                 visited_containers.add(bbox)
+                print("skipped this box")
                 continue
             
             for j, (id, (id_center_x, id_center_y)) in enumerate(ids):

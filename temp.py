@@ -156,7 +156,7 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
     image = cv2.imread(image_path)
     # print(model.names)
     # Run detection
-    image = cv2.merge([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)] * 3)
+    # image = cv2.merge([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)] * 3)
     results = model.predict(image, verbose=False)[0]
     
     # Draw individual bounding boxes
@@ -195,8 +195,8 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 # 🔧 Example usage (edit here)
 # ============================
 if __name__ == "__main__":
-    model_path = "./models/Bar_Detection_M.pt"
-    image_path = "./testing images/images/DJI_0560.JPG"
+    model_path = "./models/box_detection.pt"
+    image_path = "./testing images/debug/DJI_0131.JPG"
     confidence = 0.2
     merge_dist = 50
     save_output_path = "output_with_boundaries.jpg"

@@ -2,7 +2,7 @@ import os
 import sys
 import time
 from package.google_ocr import OCRClient
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from package.config_loader import set_config, get_config
 from package.boundary_detection import BoundaryDetector
 from package.container_detection import ContainerDetector
@@ -43,7 +43,7 @@ mapper = RecordMapper()
 
 def process_single_image(image_path):
     
-
+    start = time.time()
     with ThreadPoolExecutor(max_workers=4) as executor:
         future_annotations = executor.submit(ocr_client.get_annotations, image_path)
         future_boundaries = executor.submit(boundary_detector.get_boundaries, image_path)
@@ -58,15 +58,21 @@ def process_single_image(image_path):
         
             
         
-    start = time.time()
+    
     # contains ROI
     boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
+    print("boundaries:",boundaries)
     
     # dimensions of image
     dims = util.get_image_dimensions(image_path)
 
     # extracting rack_ids & unique_ids
     rack_dict, box_dict = rack_box_extractor.extract_ocr_info(annotations[1:], boundaries, dims)
+
+    # FallBack Mechanism: if upper/lower bars fails then using rack id coordinates
+    upper_line_y = rack_box_extractor.min_y
+    lower_line_y = rack_box_extractor.max_y
+    boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
 
     print("\nBefore Rack dict:", rack_dict)
 
@@ -101,21 +107,41 @@ def process_single_image(image_path):
     print("\nRequired time: ", time.time() - start)
     
 
-
+is_threading = False
 def main():
     # image_directory = CONFIG['input']['image_dir']
     image_directory = CONFIG['input']['debug_image_dir']
 
     image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
 
-    for image_file in os.listdir(image_directory):
-        print("\nProcessing",image_file)
-        if not image_file.lower().endswith(image_extensions):
-            continue
+    if(is_threading):
+        image_files = sorted([
+            f for f in os.listdir(image_directory)
+            if f.lower().endswith(image_extensions)
+        ])
+
+        def process(image_file):
+            print("\nProcessing", image_file)
+            image_path = os.path.join(image_directory, image_file)
+            process_single_image(image_path)
+
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            futures = [executor.submit(process, image_file) for image_file in image_files]
+            for future in as_completed(futures):
+                try:
+                    future.result()
+                except Exception as e:
+                    print("Error:", e)
+    else:
+        for image_file in os.listdir(image_directory):
+            print("\nProcessing",image_file)
+            if not image_file.lower().endswith(image_extensions):
+                continue
 
         image_path = os.path.join(image_directory,image_file)  
         process_single_image(image_path)
         # break
+    
 
 if __name__ == "__main__":
     main()
