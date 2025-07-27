@@ -87,11 +87,12 @@ class RackStackValidator:
 
     def _validate_side(self, side_name, status, batch_id, box_list, image, offset_x, offset_y):
         # print("REACHED HERE!")
-        # print(status, batch_id)
+        print("part number:",batch_id)
         if status == "full" and batch_id in self.REF_DICT:
             expected = self.REF_DICT[batch_id]
+            print("Expected count is", expected)
             count = self._count_stacks(box_list)
-            # print("Stack Count is", count)
+            print("Stack Count is", count)
             status = "full" if count >= expected else "partial"
         # Draw boxes regardless of status
         #self._draw_visual(image, box_list, offset_x, offset_y, side_name)

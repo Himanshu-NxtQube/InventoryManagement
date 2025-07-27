@@ -1,5 +1,6 @@
 import os
 import json
+from package.s3_operator import upload_images
 
 
 
@@ -48,14 +49,19 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
 
         if not result:
             print("Unique id not found in records")
-            continue
-
-        temp_output['BARCODE_ID'] = result['barcode_number']
-        temp_output['UNIQUE_ID'] = result['uniqueId']
-        temp_output['BOXNUMBER'] = result['box_number']
-        temp_output['BOXQUANTITY'] = result['box_quantity']
-        temp_output['PARTNUMBER'] = result['part_number']
-        temp_output['INVOICE_NUMBER'] = result['invoice_number']
+            temp_output['BARCODE_ID'] = ""
+            temp_output['UNIQUE_ID'] = unique_id
+            temp_output['BOXNUMBER'] = ""
+            temp_output['BOXQUANTITY'] = ""
+            temp_output['PARTNUMBER'] = ""
+            temp_output['INVOICE_NUMBER'] = ""
+        else:
+            temp_output['BARCODE_ID'] = result['barcode_number']
+            temp_output['UNIQUE_ID'] = result['uniqueId']
+            temp_output['BOXNUMBER'] = result['box_number']
+            temp_output['BOXQUANTITY'] = result['box_quantity']
+            temp_output['PARTNUMBER'] = result['part_number']
+            temp_output['INVOICE_NUMBER'] = result['invoice_number']
 
         final_output.append(temp_output)
 
@@ -63,13 +69,15 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
         temp_output = output_template.copy()
         temp_output['RACK_ID'] = rack_dict['Q3']
         temp_output['EXCLUSION'] = exclusions['left']
-        temp_output['STATUS'] = pallet_status[0]
+        if pallet_status:
+            temp_output['STATUS'] = pallet_status[0] 
         final_output.append(temp_output)
     if not right_rack:
         temp_output = output_template.copy()
         temp_output['RACK_ID'] = rack_dict['Q4']
         temp_output['EXCLUSION'] = exclusions['right']
-        temp_output['STATUS'] = pallet_status[1]
+        if pallet_status:
+            temp_output['STATUS'] = pallet_status[1]
         final_output.append(temp_output)
 
     return final_output
@@ -78,8 +86,6 @@ def print_json(image_path, img_dims, rack_dict, records, mapping_info, exclusion
     final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status)
     json_obj = json.dumps(final_output, indent=4)
     print(json_obj)
-
-
 
 
 """
