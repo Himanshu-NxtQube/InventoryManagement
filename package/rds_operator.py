@@ -66,6 +66,7 @@ class RDSOperator:
                         existing = False
 
                     is_non_conformity = True if row['EXCLUSION'] != "" else False
+                    status = None if 'STATUS' not in row.keys() else 'filled' if row['STATUS'] == 'full' else row['STATUS']
 
                     if existing:
                         # --- Update existing record ---
@@ -86,7 +87,7 @@ class RDSOperator:
                             row['BOXQUANTITY'] if not row['BOXQUANTITY'] else "", 
                             row['PARTNUMBER'] if not row['PARTNUMBER'] else "", 
                             row['EXCLUSION'], 
-                            row['STATUS'] if 'STATUS' in row.keys() else None,
+                            status,
                             is_non_conformity, 
                             False, 
                             False, 
@@ -122,7 +123,7 @@ class RDSOperator:
                             row['BOXQUANTITY'] if row['BOXQUANTITY'] else "", 
                             row['PARTNUMBER'] if row['PARTNUMBER'] else "",
                             row['EXCLUSION'], 
-                            row['STATUS'] if 'STATUS' in row.keys() else None, 
+                            status,
                             is_non_conformity, 
                             False, 
                             False, 
