@@ -178,7 +178,7 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
         # Add confidence label
         label = f"{model.names[cls]}: {conf:.2f}"
         print(label)
-        cv2.putText(image, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 5, color, 5)
+        cv2.putText(image, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 2, color, 2)
 
     # Display the result
     # cv2.imshow("Detected Boundaries", image)
@@ -195,9 +195,9 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 # 🔧 Example usage (edit here)
 # ============================
 if __name__ == "__main__":
-    model_path = "./models/box_detection.pt"
-    image_path = "./testing images/debug/DJI_0684.JPG"
-    confidence = 0.9
+    model_path = "./models/Marico Box Detection.pt"
+    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/test images/DJI_0285.JPG"
+    confidence = 0.2
     merge_dist = 50
     save_output_path = "output_with_boundaries.jpg"
 

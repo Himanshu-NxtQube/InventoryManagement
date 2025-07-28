@@ -129,7 +129,7 @@ def process_single_image(image_path, report_id):
     print("\nRequired time: ", time.time() - start)
     
 
-is_threading = True
+is_threading = False
 def main():
     image_directory = CONFIG['input']['image_dir']
     # image_directory = CONFIG['input']['debug_image_dir']

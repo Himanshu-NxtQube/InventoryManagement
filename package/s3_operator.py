@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
  
 # Set AWS credentials directly from environment variables
-os.environ["AWS_ACCESS_KEY_ID"] = os.getenv("new_aws_access_key_id")
-os.environ["AWS_SECRET_ACCESS_KEY"] = os.getenv("new_aws_secret_access_key")
+os.environ["AWS_ACCESS_KEY_ID"] = os.getenv("aws_access_key_id")
+os.environ["AWS_SECRET_ACCESS_KEY"] = os.getenv("aws_secret_access_key")
 os.environ["AWS_DEFAULT_REGION"] = os.getenv("region_name")
  
 # Constants

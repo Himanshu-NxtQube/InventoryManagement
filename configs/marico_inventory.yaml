@@ -1,7 +1,7 @@
 models:
   container_model: "./models/new_pallet_best.pt"
   pallet_status_model: "./models/pallet_status_model.pt"
-  box_model: "./models/marico_box.pt"
+  box_model: "./models/Marico Box Detection.pt"
   boundary_model: "./models/boundary_model.pt"
 
 bars:

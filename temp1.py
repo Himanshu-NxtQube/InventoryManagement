@@ -13,7 +13,7 @@ conn = pymysql.connect(
 
 
 with conn.cursor() as cursor:
-    query = 'select * from `inferances`;'
+    query = 'select * from `row-data` where uniqueId="@AE4891";'
     cursor.execute(query)
     res = cursor.fetchall()[-12:]
     for row in res:
