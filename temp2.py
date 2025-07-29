@@ -16,7 +16,7 @@ def draw_boxes_with_rx_line(image_path, box_list):
 
     # Identify top box (minimum cy)
     top_box = min(box_list, key=lambda b: b['cy'])
-    rx = top_box['x2'] - 115
+    rx = top_box['x1'] + 150
     cy = top_box['cy']
 
     counted_boxes = []
@@ -66,9 +66,9 @@ def _detect_boxes(roi):
 # Example usage:
 if __name__ == "__main__":
     # Replace with actual boxes from YOLO output
-    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0495.JPG"
+    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0498.JPG"
     image = cv2.imread(image_path)
     h, w, _ = image.shape
-    image = image[:, :w//2]
+    # image = image[:, w//2:]
     res = _detect_boxes(image)
     draw_boxes_with_rx_line(image_path, res)
