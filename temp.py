@@ -202,8 +202,8 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 # 🔧 Example usage (edit here)
 # ============================
 if __name__ == "__main__":
-    model_path = "./models/Marico Box Detection.pt"
-    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0495.JPG"
+    model_path = "./models/new_blue_orange_bar.pt"
+    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0487.JPG"
     # image_path = "./roi.png"
     confidence = 0
     merge_dist = 50

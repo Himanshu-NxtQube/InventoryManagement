@@ -30,3 +30,5 @@ thresholds:
   
   ocr_threshold:
     area_threshold: 5000
+
+nomenclature: 'boxes'

@@ -1,8 +1,8 @@
 models:
-  container_model: "./models/new_pallet_best.pt"
+  container_model: "./models/Marico_Pallet.pt"
   pallet_status_model: "./models/new pallet status model.pt"
   box_model: "./models/Marico Box Detection.pt"
-  boundary_model: "./models/boundary_model.pt"
+  boundary_model: "./models/new_blue_orange_bar.pt"
 
 bars:
   vertical: 0
@@ -38,3 +38,5 @@ thresholds:
     confidence_threshold: 0.5
 
 extras: ['pallet_status']
+
+nomenclature: 'pallets'

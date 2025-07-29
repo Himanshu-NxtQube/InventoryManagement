@@ -36,3 +36,5 @@ thresholds:
   pallet_model:
     distance_threshold: 500
     confidence_threshold: 0.5
+
+nomenclature: 'pallets'
