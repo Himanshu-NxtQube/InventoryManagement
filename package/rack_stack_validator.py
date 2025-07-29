@@ -32,8 +32,10 @@ class RackStackValidator:
         if not box_list:
             return 0
         top = min(box_list, key=lambda b: b['cy'])
-        cx, cy = top['cx'], top['cy']
-        count = sum(1 for b in box_list if b['x1'] <= cx <= b['x2'] and b['y1'] >= cy)
+        # cx, cy = top['cx'], top['cy']
+        rx = top['x2'] - 15
+        cy = top['cy']
+        count = sum(1 for b in box_list if b['x1'] <= rx <= b['x2'] and b['y1'] >= cy)
         # print("Stack:",count+1)
         return count + 1
 
@@ -57,8 +59,8 @@ class RackStackValidator:
             )
         ]
 
-        # print(f"initial {left_status = }")
-        # print(f"initial {right_status = }")
+        print(f"initial {left_status = }")
+        print(f"initial {right_status = }")
 
         image = cv2.imread(image_path)
         roi = image[upper_line_y:lower_line_y, left_line_x:right_line_x]
