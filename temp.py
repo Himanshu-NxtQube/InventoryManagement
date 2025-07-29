@@ -156,12 +156,15 @@ class BoundaryDetector:
 def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge_threshold=20, save_path=None):
     model = YOLO(model_path)
     image = cv2.imread(image_path)
-    depth_map = depth_estimator.get_depth_map(image_path)
-    colored_depth = cv2.applyColorMap(depth_map, cv2.COLORMAP_PLASMA)
+    # h, w, _  = image.shape
+    # left_image = image[:, :w//2]
+    # image = left_image
+    # depth_map = depth_estimator.get_depth_map(image_path)
+    # colored_depth = cv2.applyColorMap(depth_map, cv2.COLORMAP_PLASMA)
     # print(model.names)
     # Run detection
     # image = cv2.merge([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)] * 3)
-    results = model.predict(colored_depth, verbose=False)[0]
+    results = model.predict(image, verbose=False)[0]
     
     # Draw individual bounding boxes
     for box in results.boxes:
@@ -177,12 +180,12 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
         color = (255, 0, 0) if cls == 0 else (0, 165, 255)  # Blue for class 0, Orange for class 1
         
         # Draw bounding box
-        cv2.rectangle(colored_depth, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
         
         # Add confidence label
         label = f"{model.names[cls]}: {conf:.2f}"
         print(label)
-        cv2.putText(colored_depth, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 2, color, 2)
+        cv2.putText(image, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 2, color, 2)
 
     # Display the result
     # cv2.imshow("Detected Boundaries", image)
@@ -191,7 +194,7 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 
     # Optionally save the image
     if save_path:
-        cv2.imwrite(save_path, colored_depth)
+        cv2.imwrite(save_path, image)
         print(f"Saved annotated image to {save_path}")
 
 
@@ -199,8 +202,9 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 # 🔧 Example usage (edit here)
 # ============================
 if __name__ == "__main__":
-    model_path = "./models/new pallet status model.pt"
-    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing3/DJI_0529.JPG"
+    model_path = "./models/Marico Box Detection.pt"
+    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0495.JPG"
+    # image_path = "./roi.png"
     confidence = 0
     merge_dist = 50
     save_output_path = "output_with_boundaries.jpg"
