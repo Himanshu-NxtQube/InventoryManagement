@@ -12,6 +12,8 @@ class RackBoxExtractor:
 
         self.center_x = dims[0]/2
         self.center_y = dims[1]/2
+        self.min_x_threashold = dims[0] * 0.05
+        self.max_x_threashold = dims[0] * 0.95
         rack_dict = self.extract_rack_info(annotations, boundaries)
         box_dict = self.extract_box_info(annotations, boundaries)
 
@@ -47,14 +49,14 @@ class RackBoxExtractor:
             area = width * height
 
             
-            
+            # print(current, area)
             
             # Check if in ROI
-            if left_line_x <= center_x <= right_line_x and max(upper_line_y, self.min_y) <= center_y <= min(self.max_y, lower_line_y):
+            if max(left_line_x, self.min_x_threashold) <= center_x <= min(right_line_x, self.max_x_threashold) and max(upper_line_y, self.min_y) <= center_y <= min(self.max_y, lower_line_y):
                 # print("Annotation:",current)
                 if current == "@" and i + 1 < len(annotations):
                     next_text = annotations[i + 1].description.strip()[:6]
-                    bbox = [(v.x, v.y) for v in annotations[i].bounding_poly.vertices]
+                    bbox = [(v.x, v.y) for v in annotations[i+ 1].bounding_poly.vertices]
                     x1, y1, x2, y2 = int(bbox[0][0]), int(bbox[0][1]), int(bbox[2][0]), int(bbox[2][1])
                     center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2
 
@@ -67,19 +69,21 @@ class RackBoxExtractor:
                     height = y_max - y_min
                     area += width * height
                     combined = "@" + next_text
+                    # print('->', combined, area)
                     if regex.match(self.CONFIG['unique_id']['pattern'], combined) and area > self.CONFIG['unique_id']['area']:
-                        # print(combined, area)
                         # uids.append((combined.upper(), (center_x, center_y)))
                         if combined[0] != '@':
                             combined = '@' + combined[1:]
                         uids[combined.upper()] = (center_x, center_y)
                         i += 2  # skip next, already processed
                         continue
-
+                
                 # Also handle cases where OCR didn’t split it
                 combined = current.replace(" ", "").replace("\n", "").strip()[:7]
-                if regex.match(self.CONFIG['unique_id']['pattern'], combined):
+                # print(combined, area)
+                if regex.match(self.CONFIG['unique_id']['pattern'], combined) and area > self.CONFIG['unique_id']['area']:
                     # uids.append((combined.upper(), (center_x, center_y)))
+                    print(combined)
                     if combined[0] != '@':
                         combined = '@' + combined[1:]
                     uids[combined.upper()] = (center_x, center_y)

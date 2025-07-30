@@ -91,12 +91,12 @@ def process_single_image(image_path, report_id):
     lower_line_y = int(rack_box_extractor.max_y)
     boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
 
-    # print("\nBefore Rack dict:", rack_dict)
+    print("\nBefore Rack dict:", rack_dict)
 
     # infer missing rack ids
     rack_dict = rack_quad_infer.infer_Q3_Q4(rack_dict)
 
-    # print("\nAfter Rack dict:", rack_dict)
+    print("\nAfter Rack dict:", rack_dict)
 
     # fetch all records
     records = data_fetcher.gather_all_records(box_dict, sys.argv[1])

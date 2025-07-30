@@ -37,6 +37,9 @@ thresholds:
     distance_threshold: 500
     confidence_threshold: 0.5
 
+unique_id:
+  area: 250
+
 extras: ['pallet_status']
 
 nomenclature: 'pallets'

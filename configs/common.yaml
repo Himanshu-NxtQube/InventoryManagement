@@ -9,6 +9,5 @@ google_vision_client:
 
 unique_id:
   pattern: "^[QG@]([A-Z]{2}\\d{4})$"
-  area: 250
 
 extras: []

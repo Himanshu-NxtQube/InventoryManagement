@@ -1,11 +1,11 @@
 models:
   qr_model: "./models/qr_detection.pt"
   container_model: "./models/box_detection.pt"
-  boundary_model: "./models/Bar_Detection_M.pt"
+  boundary_model: "./models/new_blue_orange_bar.pt"
 
 bars:
-  vertical: 1
-  horizontal: 0
+  vertical: 0
+  horizontal: 1
 
 rack_infer_func:
   path: "package/infer functions/mahindra_infer_func.py"
@@ -30,5 +30,8 @@ thresholds:
   
   ocr_threshold:
     area_threshold: 5000
+
+unique_id:
+  area: 750
 
 nomenclature: 'boxes'

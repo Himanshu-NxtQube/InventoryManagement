@@ -13,8 +13,8 @@ conn = pymysql.connect(
 
 
 with conn.cursor() as cursor:
-    query = 'select * from inferances;'
+    query = 'select * from reports where userId=2;'
     cursor.execute(query)
-    res = cursor.fetchall()[-3:]
+    res = cursor.fetchall()[-1:]
     for row in res:
-        print(row)
+        print(row[1])
