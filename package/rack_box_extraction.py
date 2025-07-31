@@ -49,7 +49,7 @@ class RackBoxExtractor:
             area = width * height
 
             
-            # print(current, area)
+            print(current, center_x, center_y)
             
             # Check if in ROI
             if max(left_line_x, self.min_x_threashold) <= center_x <= min(right_line_x, self.max_x_threashold) and max(upper_line_y, self.min_y) <= center_y <= min(self.max_y, lower_line_y):
