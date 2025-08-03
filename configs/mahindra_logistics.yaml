@@ -1,11 +1,11 @@
 models:
   qr_model: "./models/qr_detection.pt"
-  container_model: "./models/box_detection.pt"
-  boundary_model: "./models/new_blue_orange_bar.pt"
+  container_model: "./models/mahindra_box_best.pt"
+  boundary_model: "./models/Mahindra_orange_blue.pt"
 
 bars:
-  vertical: 0
-  horizontal: 1
+  vertical: 1
+  horizontal: 0
 
 rack_infer_func:
   path: "package/infer functions/mahindra_infer_func.py"

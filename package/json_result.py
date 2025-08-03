@@ -21,8 +21,12 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
     }
 
     if not rack_dict:
-        output_template['EXCLUSION'] = "No Rack ID found"
-        return output_template
+        # output_template['EXCLUSION'] = "No Rack ID found"
+        # return output_template
+        exclusions['left'] = "No Rack ID found"
+        exclusions['right'] = "No Rack ID found"
+        rack_dict['Q3'] = ""
+        rack_dict['Q4'] = ""
 
     left_rack = False
     right_rack = False
@@ -72,11 +76,11 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
         temp_output['RACK_ID'] = rack_dict['Q3']
         temp_output['EXCLUSION'] = exclusions['left']
         if pallet_status:
-            if exclusions['left'] == 'Empty Rack':
+            if exclusions['left'] == 'empty rack':
                 temp_output['STATUS'] = 'empty'
             else:
                 temp_output['STATUS'] = ""
-            # if exclusions['left'] == 'Empty Rack':
+            # if exclusions['left'] == 'empty rack':
             #     temp_output['STATUS'] = 'empty'
             # elif pallet_status[0] == 'empty':
             #     temp_output['STATUS'] = 'partial'
@@ -88,11 +92,11 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
         temp_output['RACK_ID'] = rack_dict['Q4']
         temp_output['EXCLUSION'] = exclusions['right']
         if pallet_status:
-            if exclusions['right'] == 'Empty Rack':
+            if exclusions['right'] == 'empty rack':
                 temp_output['STATUS'] = 'empty'
             else:
                 temp_output['STATUS'] = ""
-            # if exclusions['right'] == 'Empty Rack':
+            # if exclusions['right'] == 'empty rack':
             #     temp_output['STATUS'] = 'empty'
             # elif pallet_status[1] == 'empty':
             #     temp_output['STATUS'] = 'partial'

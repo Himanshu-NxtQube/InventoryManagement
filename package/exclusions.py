@@ -35,12 +35,12 @@ def get_exclusion(mapping_info, img_dims):
     if left_unmapped_containers_cnt != 0:
         left_rack_exclusion = f"There are {left_containers_cnt} {config['nomenclature']}, but there is some issue with the sticker of {left_unmapped_containers_cnt} {config['nomenclature']}"
     elif left_containers_cnt == 0:
-        left_rack_exclusion = f"Empty Rack"
+        left_rack_exclusion = f"empty rack"
     
     if right_unmapped_containers_cnt != 0:
         right_rack_exclusion = f"There are {right_containers_cnt} {config['nomenclature']}, but there is some issue with the sticker of {right_unmapped_containers_cnt} {config['nomenclature']}"
     elif right_containers_cnt == 0:
-        right_rack_exclusion = f"Empty Rack"
+        right_rack_exclusion = f"empty rack"
 
 
     return {'left': left_rack_exclusion,
