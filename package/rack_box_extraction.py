@@ -174,20 +174,21 @@ class RackBoxExtractor:
             if len(text) >= exp_len:
                 text = text[:exp_len]
                 if pattern.fullmatch(text):
-                    center, area = self.compute_bbox(annotation.bounding_poly.vertices)
+                    center, area = self.compute_bbox([annotation.bounding_poly.vertices])
                     res.append({'rack_id':text, 'center': center, 'area': area})
                 i+=1
                 continue
 
             match = pattern.match(text, partial=True)
             if match and match.partial:
-                group_verts = list(annotation.bounding_poly.vertices)
+                # group_verts = list(annotation.bounding_poly.vertices)
+                group_verts = []
                 combined = text
                 j = i + 1
                 while len(combined) < exp_len and j < n:
                     nxt = annotations[j]
                     combined += nxt.description.strip()
-                    group_verts.extend(nxt.bounding_poly.vertices)
+                    group_verts.append(nxt.bounding_poly.vertices)
                     j += 1
                 combined = combined[:exp_len]
                 if pattern.fullmatch(combined):
@@ -296,12 +297,24 @@ class RackBoxExtractor:
         vertices: list of {'x':float,'y':float} entries, can be many from merged annotations
         returns: (center_x, center_y), area
         """
-        xs = [v.x for v in vertices]
-        ys = [v.y for v in vertices]
-        min_x, max_x = min(xs), max(xs)
-        min_y, max_y = min(ys), max(ys)
-        width = max_x - min_x
-        height = max_y - min_y
-        center = ((min_x + max_x) / 2, (min_y + max_y) / 2)
-        area = width * height
-        return center, area
+        area = 0
+        center_sum_x = 0
+        center_sum_y = 0
+        count = 0
+
+        for vertice in vertices:
+            xs = [v.x for v in vertice]
+            ys = [v.y for v in vertice]
+            min_x, max_x = min(xs), max(xs)
+            min_y, max_y = min(ys), max(ys)
+            width = max_x - min_x
+            height = max_y - min_y
+            center = ((min_x + max_x) / 2, (min_y + max_y) / 2)
+            
+            area += width * height
+            center_sum_x += center[0]
+            center_sum_y += center[1]
+            count += 1
+
+        avg_center = (center_sum_x // count, center_sum_y // count) if count > 0 else (0, 0)
+        return avg_center, area

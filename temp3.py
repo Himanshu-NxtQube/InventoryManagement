@@ -11,7 +11,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./models/GoogleVisionCredential.
 client = vision.ImageAnnotatorClient()
 
 # Load image
-image_path = "./testing images/debug/DJI_0736.JPG"
+image_path = "./testing images/debug/DJI_0992.JPG"
 with io.open(image_path, 'rb') as image_file:
     content = image_file.read()
 
@@ -33,8 +33,8 @@ for i, text in enumerate(texts):
 
     if i > 0:  # first one is the entire text block, skip it
         x, y = pts[0]
-        cv2.putText(img, text.description, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+        cv2.putText(img, text.description, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
+cv2.circle(img, (3395, 1969), 10, (255,0,0), 15)
 # Show image
 # cv2.imshow("OCR Annotations", img)
 # cv2.waitKey(0)
