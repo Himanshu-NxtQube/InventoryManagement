@@ -1,7 +1,7 @@
 from google.cloud import vision
 from package.config_loader import get_config
 import os
-import cv2
+import io
 
 class OCRClient:
         
@@ -11,13 +11,15 @@ class OCRClient:
         self.client = vision.ImageAnnotatorClient()
     
     def get_annotations(self, image_path: str):
-        image = cv2.imread(image_path)
-        if image is None:
-            raise ValueError(f"Error loading image: {image_path}")
+        # image = cv2.imread(image_path)
+        # if image is None:
+        #     raise ValueError(f"Error loading image: {image_path}")
 
-        # Convert image to bytes for Google Vision API
-        _, image_encoded = cv2.imencode('.jpg', image)
-        content = image_encoded.tobytes()
+        # # Convert image to bytes for Google Vision API
+        # _, image_encoded = cv2.imencode('.jpg', image)
+        # content = image_encoded.tobytes()
+        with io.open(image_path, 'rb') as image_file:
+            content = image_file.read()
         response = self.client.text_detection(image=vision.Image(content=content))
         annotations = response.text_annotations
         return annotations

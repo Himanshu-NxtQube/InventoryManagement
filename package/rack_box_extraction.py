@@ -14,6 +14,7 @@ class RackBoxExtractor:
         self.center_y = dims[1]/2
         self.min_x_threashold = dims[0] * 0.05
         self.max_x_threashold = dims[0] * 0.95
+        self.max_y_limit = dims[1] - dims[1]*0.15
         rack_dict = self.extract_rack_info(annotations, boundaries)
         box_dict = self.extract_box_info(annotations, boundaries)
 
@@ -52,7 +53,7 @@ class RackBoxExtractor:
             # print(current, center_x, center_y)
             
             # Check if in ROI
-            if max(left_line_x, self.min_x_threashold) <= center_x <= min(right_line_x, self.max_x_threashold) and max(upper_line_y, self.min_y) <= center_y <= min(self.max_y, lower_line_y):
+            if max(left_line_x, self.min_x_threashold) <= center_x <= min(right_line_x, self.max_x_threashold) and max(upper_line_y, self.min_y) <= center_y <= min(self.max_y, lower_line_y, self.max_y_limit):
                 # print("Annotation:",current)
                 if current == "@" and i + 1 < len(annotations):
                     next_text = annotations[i + 1].description.strip()[:6]
@@ -79,7 +80,8 @@ class RackBoxExtractor:
                         continue
                 
                 # Also handle cases where OCR didn’t split it
-                combined = current.replace(" ", "").replace("\n", "").strip()[:7]
+                # combined = current.replace(" ", "").replace("\n", "").strip()[:7]
+                combined = current.replace(" ", "").replace("\n", "").strip()
                 # print(combined, area)
                 if regex.match(self.CONFIG['unique_id']['pattern'], combined) and area > self.CONFIG['unique_id']['area']:
                     # uids.append((combined.upper(), (center_x, center_y)))
@@ -90,6 +92,7 @@ class RackBoxExtractor:
 
             i += 1
 
+        print(uids)
         return uids
     
     def extract_rack_info(self, annotations, boundaries):

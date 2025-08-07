@@ -8,6 +8,6 @@ google_vision_client:
 #   unique_id: "^@([A-Z]{2}\\d{4})$"
 
 unique_id:
-  pattern: "^[QG@]([A-Z]{2}\\d{4})$"
+  pattern: "^[QGD@]([A-Z]{2}\\d{4})$"
 
 extras: []
