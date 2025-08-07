@@ -28,3 +28,4 @@ if __name__=='__main__':
     ocr_client = OCRClient()
     res = ocr_client.get_annotations('annotations.png')
     print(res)
+    print("Himanshu")
