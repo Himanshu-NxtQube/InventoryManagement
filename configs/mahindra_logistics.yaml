@@ -29,7 +29,7 @@ thresholds:
     confidence_threshold: 0.9
   
   ocr_threshold:
-    area_threshold: 5000
+    area_threshold: 4000
 
 unique_id:
   area: 750

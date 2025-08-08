@@ -65,7 +65,8 @@ class RDSOperator:
                     else:
                         existing = False
 
-                    is_non_conformity = True if row['EXCLUSION'][:5] == "There" else False
+                    # is_non_conformity = True if row['EXCLUSION'][:5] == "There" else False
+                    is_non_conformity = row['EXCLUSION'] not in ("empty rack", "")
                     status = None if 'STATUS' not in row.keys() else 'filled' if row['STATUS'] == 'full' else row['STATUS']
 
                     if existing:
