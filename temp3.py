@@ -37,7 +37,7 @@ for i, text in enumerate(texts):
     if i > 0:  # first one is the entire text block, skip it
         x, y = pts[0]
         cv2.putText(img, text.description, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
-cv2.line(img, (0, 2570), (4032, 2570), (0,0, 255), 5)
+cv2.line(img, (0, 2570), (500, 2570), (0,0, 255), 5)
 # Show image
 # cv2.imshow("OCR Annotations", img)
 # cv2.waitKey(0)

@@ -26,7 +26,7 @@ thresholds:
     merge_threshold: 50
 
   box_model:
-    confidence_threshold: 0.9
+    confidence_threshold: 0.7
   
   ocr_threshold:
     area_threshold: 4000

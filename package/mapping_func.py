@@ -47,6 +47,26 @@ class RecordMapper:
         # sorting containers by y
         containers.sort(key=lambda x:x[1][1])
 
+        # excluding back containers
+        for container in containers:
+            # containers with cy more than lower boundary of current container
+            bottom_containers = [c for c in containers if c[1][1] > container[0][3]]
+            # if container's x is between any container's x1 and x2
+            is_bottom_container = False
+            for c in bottom_containers:
+                #   c'x1   < container's cx  <  c'x2
+                if c[0][0] < container[1][0] < c[0][2]:
+                    is_bottom_container = True
+                    break
+            
+            if not is_bottom_container:
+                # checking if its not lower box (adjacent to lower orange bar)
+                if abs(container[0][3] - lower_line_y) > 500:
+                    containers.remove(container)
+
+
+
+
         # print("\nids:",ids)
         # print("\ncontainers:",containers)
 
