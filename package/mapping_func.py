@@ -61,7 +61,7 @@ class RecordMapper:
             
             if not is_bottom_container:
                 # checking if its not lower box (adjacent to lower orange bar)
-                if abs(container[0][3] - lower_line_y) > 500:
+                if abs(container[0][3] - lower_line_y) > 150:
                     containers.remove(container)
 
 
