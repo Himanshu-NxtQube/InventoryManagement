@@ -136,7 +136,7 @@ def main():
     folders = [f for f in os.listdir(_dir) if os.path.isdir(os.path.join(_dir, f))]
 
     if folders:
-        image_directory = folders[0]  # First in the list
+        image_directory = os.path.join(_dir,folders[0])  # First in the list
         print("First folder found:", image_directory)
     else:
         print("No folders found in", _dir)
@@ -173,7 +173,7 @@ def main():
         #             print("Error:", e)
         # - - - - - - - - - - - - - - - - - - - - - - 
 
-        num_workers = min(4, cpu_count())
+        num_workers = max(4, cpu_count())
         image_paths = [(os.path.join(image_directory, f), report_id) for f in image_files]
 
         print(f"Running with {num_workers} processes...")

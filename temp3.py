@@ -11,7 +11,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./models/GoogleVisionCredential.
 client = vision.ImageAnnotatorClient()
 
 # Load image
-image_path = "./testing images/debug/DJI_0547.JPG"
+image_path = "./testing images/debug/DJI_0906.JPG"
 with io.open(image_path, 'rb') as image_file:
     content = image_file.read()
 # image = cv2.imread(image_path)
