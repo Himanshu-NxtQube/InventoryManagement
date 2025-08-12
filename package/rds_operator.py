@@ -35,10 +35,10 @@ class RDSOperator:
                 cursor.execute(insert_query, values)
                 conn.commit()
                 image_obj_key_id = cursor.lastrowid
-                print(f"{image_obj_key_id = }")
+                # print(f"{image_obj_key_id = }")
                 # print(f"{s3_key = }")
-                print(f"{s3_url = }\n")
-                print("Insert successful to image-obj-keys.")
+                # print(f"{s3_url = }\n")
+                # print("Insert successful to image-obj-keys.")
                 return image_obj_key_id
             except:
                 print("Insert unsuccessful to image-obj-keys.")

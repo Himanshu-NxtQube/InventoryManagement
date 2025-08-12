@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import shutil
 import pymysql
 from dotenv import load_dotenv
 from package.google_ocr import OCRClient
@@ -63,7 +64,7 @@ def process_single_image(image_path, report_id):
         future_annotations = executor.submit(ocr_client.get_annotations, image_path)
         future_boundaries = executor.submit(boundary_detector.get_boundaries, image_path)
         future_container = executor.submit(container_detector.get_detections, image_path)
-        # future_image_obj_key_id = executor.submit(rds_operator.store_img_info, image_path, conn)
+        future_image_obj_key_id = executor.submit(rds_operator.store_img_info, image_path, conn)
         if 'pallet_status' in extras:
             future_depth_map = executor.submit(depth_estimator.get_depth_map, image_path)
             depth_map = future_depth_map.result()
@@ -71,7 +72,7 @@ def process_single_image(image_path, report_id):
         left_line_x, right_line_x, upper_line_y, lower_line_y = future_boundaries.result()
         annotations = future_annotations.result()
         container_res = future_container.result()
-        # image_obj_key_id = future_image_obj_key_id.result()
+        image_obj_key_id = future_image_obj_key_id.result()
         
             
         
@@ -123,7 +124,7 @@ def process_single_image(image_path, report_id):
 
     # TODO: tidy up this process (i.e. storing this data to RDS ) and arguments
     # storing result in RDS process
-    # rds_operator.store_data_to_RDS(image_path, conn, user_id, image_obj_key_id, report_id, dims, rack_dict, records, mapping_info, exclusions, pallet_status)
+    rds_operator.store_data_to_RDS(image_path, conn, user_id, image_obj_key_id, report_id, dims, rack_dict, records, mapping_info, exclusions, pallet_status)
 
     
     print("\nRequired time: ", time.time() - start)
@@ -131,8 +132,15 @@ def process_single_image(image_path, report_id):
 
 is_threading = False
 def main():
-    # image_directory = CONFIG['input']['image_dir']
-    image_directory = CONFIG['input']['debug_image_dir']
+    _dir = CONFIG['input']['image_dir']
+    folders = [f for f in os.listdir(_dir) if os.path.isdir(os.path.join(_dir, f))]
+
+    if folders:
+        image_directory = folders[0]  # First in the list
+        print("First folder found:", image_directory)
+    else:
+        print("No folders found in", _dir)
+        return
 
     image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
 
@@ -143,8 +151,8 @@ def main():
     
     # creation of report
     report_id = 0
-    # report_id = rds_operator.create_report(conn, user_id)
-    # print(report_id)
+    report_id = rds_operator.create_report(conn, user_id)
+    print(report_id)
 
     if(is_threading):
         #  - - - - - - - - - - - - - - - - - - - - - -
@@ -180,6 +188,7 @@ def main():
 
             image_path = os.path.join(image_directory,image_file)  
             process_single_image(image_path, report_id)
+    shutil.rmtree(image_directory)
 
 
 def process_single_image_safe(args):
