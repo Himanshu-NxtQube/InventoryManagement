@@ -1,6 +1,8 @@
 from package.config_loader import get_config
 
 class RecordMapper:
+    def __init__(self):
+        self.CONFIG = get_config()
     # def segregate_ids(self, box_dict, dims):
     #     width, height = dims
 
@@ -61,7 +63,8 @@ class RecordMapper:
             
             if not is_bottom_container:
                 # checking if its not lower box (adjacent to lower orange bar)
-                if abs(container[0][3] - lower_line_y) > 150:
+                print("dist:",container[0][3] - lower_line_y)
+                if abs(container[0][3] - lower_line_y) > self.CONFIG['thresholds']['container_model']['distance_threshold']:
                     containers.remove(container)
 
 

@@ -33,9 +33,9 @@ thresholds:
   ocr_threshold:
     area_threshold: 3000
   
-  pallet_model:
-    distance_threshold: 500
-    confidence_threshold: 0.5
+  container_model:
+    confidence_threshold: 0.7
+    distance_threshold: 200
 
 unique_id:
   area: 250

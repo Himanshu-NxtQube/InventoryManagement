@@ -1,5 +1,4 @@
 models:
-  qr_model: "./models/qr_detection.pt"
   container_model: "./models/mahindra_box_best.pt"
   boundary_model: "./models/Mahindra_orange_blue.pt"
 
@@ -17,7 +16,7 @@ input:
 #   rack_id: "^HD-(\\d{2})/([A-Z])/((0[1-9])|(1[0-9])|(2[0-9])|(3[0-8]))$"
 
 rack_id:
-  pattern: "^HD-(\\d{2})/([A-Z])/((0[1-9])|(1[0-9])|(2[0-9])|(3[0-8]))$"
+  pattern: "^HD-(0[1-9]|1[0-8])/([A-Z])/(0[1-9]|1[0-9]|2[0-9]|3[0-8])$"
   expected_length: 10
 
 thresholds:
@@ -25,8 +24,9 @@ thresholds:
     confidence_threshold: 0.2
     merge_threshold: 50
 
-  box_model:
+  container_model:
     confidence_threshold: 0.7
+    distance_threshold: 500
   
   ocr_threshold:
     area_threshold: 4000

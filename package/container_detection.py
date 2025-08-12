@@ -28,7 +28,7 @@ class ContainerDetector:
       # or use cv2 if preferred
 
     def get_detections(self, image_path):
-        conf_threshold = self.CONFIG['thresholds']['box_model']['confidence_threshold']
+        conf_threshold = self.CONFIG['thresholds']['container_model']['confidence_threshold']
         preds = self.model(image_path, conf=conf_threshold, verbose=False)
 
         boxes = preds[0].boxes.xyxy.cpu()         # [N, 4]

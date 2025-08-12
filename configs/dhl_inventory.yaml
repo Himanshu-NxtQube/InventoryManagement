@@ -1,5 +1,4 @@
 models:
-  qr_model: "./models/qr_model.pt"
   boundary_model: "./models/boundary_model_dhl.pt"
   container_model: "./models/pallet_model_01.pt"
   pallet_status_model: "./models/pallet_status_model1.pt"
@@ -27,15 +26,16 @@ thresholds:
     confidence_threshold: 0.5
     merge_threshold: 50
 
-  box_model:
+  container_model:
     confidence_threshold: 0.5
+    distance_threshold: 200
   
   ocr_threshold:
     area_threshold: 1000
   
-  pallet_model:
-    distance_threshold: 500
-    confidence_threshold: 0.5
+  # pallet_model:
+  #   distance_threshold: 500
+  #   confidence_threshold: 0.2
 
 unique_id:
   area: 250
