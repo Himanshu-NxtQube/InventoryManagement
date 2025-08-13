@@ -14,7 +14,7 @@ from package.quadrant_inference import RackQuadrantInferer
 from package.data_retriever import RDSDataFetcher
 from package.mapping_func import RecordMapper
 from package.utils import Utilities
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool, cpu_count, set_start_method
 from package.rack_stack_validator import RackStackValidator
 from package.depth_estimation import DepthEstimator
 from package.part_numbers_fetcher import get_left_right_part_numbers
@@ -172,7 +172,7 @@ def main():
         #         except Exception as e:
         #             print("Error:", e)
         # - - - - - - - - - - - - - - - - - - - - - - 
-
+        set_start_method('spawn', force=True)
         num_workers = max(4, cpu_count())
         image_paths = [(os.path.join(image_directory, f), report_id) for f in image_files]
 
