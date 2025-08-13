@@ -188,7 +188,7 @@ class RackBoxExtractor:
                 group_verts = []
                 combined = text
                 j = i + 1
-                while len(combined) <= exp_len and j < n:
+                while len(combined) < exp_len and j < n:
                     nxt = annotations[j]
                     combined += nxt.description.strip()
                     group_verts.append(nxt.bounding_poly.vertices)
