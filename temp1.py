@@ -13,8 +13,8 @@ conn = pymysql.connect(
 
 
 with conn.cursor() as cursor:
-    query = 'select * from reports where userId=2;'
+    query = "select count(*) from `inferances` where userId = 1 and DATE(updatedAt) = '2025-08-13' and exclusion = 'No Rack ID found' and isDeleted = false and isDispatched = false and reportId = 849;"
     cursor.execute(query)
     res = cursor.fetchall()[-1:]
     for row in res:
-        print(row[1])
+        print(row)

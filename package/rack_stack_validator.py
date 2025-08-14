@@ -2,6 +2,7 @@ from package.pallet_status import PalletStatus
 from ultralytics import YOLO
 import torchvision.ops as ops
 from package.config_loader import get_config
+from package.box_counter import BoxCounter
 import pandas as pd
 import cv2
 
@@ -11,10 +12,16 @@ class RackStackValidator:
     def __init__(self):
         self.CONFIG = get_config()
         self.model = YOLO(self.CONFIG['models']['box_model'])
+        self.box_counter = BoxCounter()
         df_loaded = pd.read_csv(self.CONFIG['input']['stack_levels_csv'])
 
         # Create dictionary with format {Batch ID: Stack Level}
-        self.REF_DICT = dict(zip(df_loaded["Batch ID"], df_loaded["Stack Level"]))
+        self.REF_DICT = {
+            batch: {"Max Layer": max_layer, "Max Boxes": max_boxes}
+            for batch, max_layer, max_boxes in zip(
+                df_loaded["Batch"], df_loaded["Max Layer"], df_loaded["Max Boxes"]
+            )
+        }
         self.threshold = self.CONFIG['thresholds']['box_model']['confidence_threshold']
         # print(self.threshold)
         self.pallet_status_estimator = PalletStatus()
@@ -42,16 +49,19 @@ class RackStackValidator:
     def _count_stacks(self, box_list):
         if not box_list:
             return 0
+        
         top_sorted = sorted(box_list, key=lambda b: b['cy'])
         top1 = top_sorted[0]
-        top2 = top_sorted[1]
-        print("len:",len(box_list))
+        top2 = top_sorted[1] if len(top_sorted) > 1 else None
+        
         rx = top1['x2'] - 150
         lx = top1['x1'] + 150
         cy = top1['cy']
         count11 = sum(1 for b in box_list if b['x1'] <= rx <= b['x2'] and b['y1'] >= cy)
         count12 = sum(1 for b in box_list if b['x1'] <= lx <= b['x2'] and b['y1'] >= cy)
         
+        if top2 == None:
+            return max(count11, count12) + 1
 
         rx = top2['x2'] - 150
         lx = top2['x1'] + 150
@@ -63,10 +73,10 @@ class RackStackValidator:
 
         # for b in box_list:
         #     print(b['x1'], b['x2'])
-        print(f"count11: ",count11)
-        print(f"count12: ",count12)
-        print(f"count21: ",count21)
-        print(f"count22: ",count22)
+        # print(f"count11: ",count11)
+        # print(f"count12: ",count12)
+        # print(f"count21: ",count21)
+        # print(f"count22: ",count22)
         
         return max(count11, count12, count21, count22) + 1
 
@@ -110,22 +120,31 @@ class RackStackValidator:
         left_boxes = [box for box in all_boxes if box['cx'] < mid_x]
         right_boxes = [box for box in all_boxes if box['cx'] >= mid_x]
 
-        # Validate left and right separately
-        final_left = self._validate_side('left', left_status, batch_array[0],
-                                         left_boxes, image, left_line_x, upper_line_y)
+        left_count = self._count_stacks(left_boxes)
+        right_count = self._count_stacks(right_boxes)
 
-        final_right = self._validate_side('right', right_status, batch_array[1],
-                                          right_boxes, image, left_line_x + mid_x, upper_line_y)
+        # self.box_counter.estimate_box_count()
+        left_box_count = self.box_counter.estimate_box_count(self.REF_DICT, batch_array[0], left_status, left_count)
+        right_box_count = self.box_counter.estimate_box_count(self.REF_DICT, batch_array[1], right_status, right_count)
+
+        print("left box count:", left_box_count)
+        print("right box count:", right_box_count)
+
+        # Validate left and right separately
+        final_left = self._validate_side(left_status, 
+                                         batch_array[0],
+                                         left_count)
+
+        final_right = self._validate_side(right_status, 
+                                          batch_array[1],
+                                          right_count)
 
         return final_left, final_right
 
-    def _validate_side(self, side_name, status, batch_id, box_list, image, offset_x, offset_y):
-        print("part number:", batch_id)
+    def _validate_side(self, status, batch_id, count):
+        # print("part number:", batch_id)
         if status == "full" and batch_id in self.REF_DICT:
-            expected = self.REF_DICT[batch_id]
-            print("Expected count is", expected)
-            count = self._count_stacks(box_list)
-            print("Stack Count is", count)
+            expected = self.REF_DICT[batch_id]["Max Layer"]
             status = "full" if count >= expected else "partial"
 
         return status
