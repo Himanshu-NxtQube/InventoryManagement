@@ -13,5 +13,5 @@ class BoxCounter:
         print("Stack count:", stack_count)
         if status == 'full':
             return stack_count * box_per_stack
-        elif status == 'partial':
+        else:
             return [(stack_count - 1) * box_per_stack, stack_count * box_per_stack]

@@ -120,26 +120,29 @@ class RackStackValidator:
         left_boxes = [box for box in all_boxes if box['cx'] < mid_x]
         right_boxes = [box for box in all_boxes if box['cx'] >= mid_x]
 
-        left_count = self._count_stacks(left_boxes)
-        right_count = self._count_stacks(right_boxes)
+        self.left_stack_count = self._count_stacks(left_boxes)
+        self.right_stack_count = self._count_stacks(right_boxes)
 
         # self.box_counter.estimate_box_count()
-        left_box_count = self.box_counter.estimate_box_count(self.REF_DICT, batch_array[0], left_status, left_count)
-        right_box_count = self.box_counter.estimate_box_count(self.REF_DICT, batch_array[1], right_status, right_count)
+        self.left_box_count = self.box_counter.estimate_box_count(self.REF_DICT, batch_array[0], left_status, self.left_stack_count)
+        self.right_box_count = self.box_counter.estimate_box_count(self.REF_DICT, batch_array[1], right_status, self.right_stack_count)
 
-        print("left box count:", left_box_count)
-        print("right box count:", right_box_count)
+        print("left box count:", self.left_box_count)
+        print("right box count:", self.right_box_count)
 
         # Validate left and right separately
         final_left = self._validate_side(left_status, 
                                          batch_array[0],
-                                         left_count)
+                                         self.left_stack_count)
 
         final_right = self._validate_side(right_status, 
                                           batch_array[1],
-                                          right_count)
+                                          self.right_stack_count)
 
         return final_left, final_right
+    
+    def get_counts(self):
+        return (self.left_stack_count, self.right_stack_count), (self.left_box_count, self.right_box_count)
 
     def _validate_side(self, status, batch_id, count):
         # print("part number:", batch_id)

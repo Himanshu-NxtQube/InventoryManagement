@@ -1,10 +1,11 @@
 import os
+import csv
 import json
 from package.s3_operator import upload_images
 
 
 
-def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status):
+def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status, box_counts, stack_counts):
     final_output = []
     image_name = os.path.basename(image_path)
 
@@ -41,15 +42,23 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
             temp_output['RACK_ID'] = rack_dict['Q3']
             temp_output['EXCLUSION'] = exclusions['left']
             if pallet_status:
-                if exclusions['left'] == "":
+                if exclusions['left'] == "" or exclusions['left'] == "No Rack ID found":
                     temp_output['STATUS'] = pallet_status[0] if pallet_status[0] != 'empty' else 'partial'
+                else:
+                    temp_output['STATUS'] = ""
+                temp_output['BOX_COUNT'] = box_counts[0]
+                temp_output['STACK_COUNT'] = stack_counts[0]
         else:
             right_rack = True
             temp_output['RACK_ID'] = rack_dict['Q4']
             temp_output['EXCLUSION'] = exclusions['right']
             if pallet_status:
-                if exclusions['right'] == "":
+                if exclusions['right'] == "" or exclusions['right'] == "No Rack ID found":
                     temp_output['STATUS'] = pallet_status[1] if pallet_status[1] != 'empty' else 'partial'
+                else:
+                    temp_output['STATUS'] = ""
+                temp_output['BOX_COUNT'] = box_counts[1]
+                temp_output['STACK_COUNT'] = stack_counts[1]
 
         result = next((record for record in records if record['uniqueId'] == unique_id), None)
 
@@ -80,6 +89,8 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
                 temp_output['STATUS'] = 'empty'
             else:
                 temp_output['STATUS'] = ""
+            temp_output['BOX_COUNT'] = ""
+            temp_output['STACK_COUNT'] = ""
             # if exclusions['left'] == 'empty rack':
             #     temp_output['STATUS'] = 'empty'
             # elif pallet_status[0] == 'empty':
@@ -96,6 +107,8 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
                 temp_output['STATUS'] = 'empty'
             else:
                 temp_output['STATUS'] = ""
+            temp_output['BOX_COUNT'] = ""
+            temp_output['STACK_COUNT'] = ""
             # if exclusions['right'] == 'empty rack':
             #     temp_output['STATUS'] = 'empty'
             # elif pallet_status[1] == 'empty':
@@ -106,11 +119,26 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
 
     return final_output
 
-def print_json(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status=None):
-    final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status)
+def print_json(image_path, img_dims, rack_dict, records, mapping_info, exclusions, csv_output=True, pallet_status=None, box_counts=None, stack_counts=None):
+    final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status, box_counts, stack_counts)
     json_obj = json.dumps(final_output, indent=4)
     print(json_obj)
+    if csv_output:
+        write_to_csv(final_output, 'output.csv')
 
+def write_to_csv(output, output_file):
+    if not output:
+        raise ValueError("output list is empty.")
+
+    fieldnames = list(output[0].keys())
+    file_exists = os.path.exists(output_file)
+    write_header = not file_exists or os.path.getsize(output_file) == 0
+
+    with open(output_file, mode="a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+        writer.writerows(output)
 
 """
 {

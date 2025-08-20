@@ -4,5 +4,6 @@ testing images/
 *.png
 *.jpg
 *.JPG
+*.csv
 __pycache__/
 inventory data/
