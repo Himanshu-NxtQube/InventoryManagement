@@ -32,6 +32,6 @@ thresholds:
     area_threshold: 4000
 
 unique_id:
-  area: 750
+  area: 1000
 
 nomenclature: 'boxes'
