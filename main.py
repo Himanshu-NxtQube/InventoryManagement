@@ -112,15 +112,17 @@ def process_single_image(image_path, report_id):
     if 'pallet_status' in extras:
         part_numbers = get_left_right_part_numbers(box_dict, dims, records)
         pallet_status = rack_stack_validator.get_status(image_path, depth_map, boundaries, dims, part_numbers)
+        stack_counts, box_counts = rack_stack_validator.get_counts()
     else:
         pallet_status = None
+        stack_counts, box_counts = None, None
 
     # get exclusion per rack id (side) 
     exclusions = get_exclusion(mapping_info, img_dims=dims)
     # print(exclusions)
 
     # print the final json result
-    print_json(image_path, dims, rack_dict, records, mapping_info, exclusions, pallet_status)
+    print_json(image_path, dims, rack_dict, records, mapping_info, exclusions, pallet_status=pallet_status, box_counts=box_counts, stack_counts=stack_counts)
 
     # TODO: tidy up this process (i.e. storing this data to RDS ) and arguments
     # storing result in RDS process
