@@ -44,8 +44,8 @@ class RDSOperator:
                 print("Insert unsuccessful to image-obj-keys.")
         
         
-    def store_data_to_RDS(self, image_path, conn, user_id, image_obj_key_id, report_id, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status=None):
-        final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status)
+    def store_data_to_RDS(self, image_path, conn, user_id, image_obj_key_id, report_id, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status=None, box_counts=None, stack_counts=None):
+        final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status, box_counts, stack_counts)
 
         
 
