@@ -132,7 +132,7 @@ def process_single_image(image_path, report_id):
     print("\nRequired time: ", time.time() - start)
     
 
-is_threading = False
+is_threading = True
 def main():
     _dir = CONFIG['input']['image_dir']
     folders = [f for f in os.listdir(_dir) if os.path.isdir(os.path.join(_dir, f))]
@@ -153,7 +153,7 @@ def main():
     
     # creation of report
     report_id = 0
-    report_id = rds_operator.create_report(conn, user_id, report_name=image_directory)
+    report_id = rds_operator.create_report(conn, user_id, report_name=folders[0])
     print(report_id)
 
     if(is_threading):
