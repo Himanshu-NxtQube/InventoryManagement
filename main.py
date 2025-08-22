@@ -153,7 +153,7 @@ def main():
     
     # creation of report
     report_id = 0
-    report_id = rds_operator.create_report(conn, user_id)
+    report_id = rds_operator.create_report(conn, user_id, report_name=image_directory)
     print(report_id)
 
     if(is_threading):

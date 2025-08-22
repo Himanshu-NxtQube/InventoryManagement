@@ -4,10 +4,10 @@ from package.json_result import build_json_result
 from package.s3_operator import upload_images
 
 class RDSOperator:
-    def create_report(self, conn, user_id, operator_name='test'):
+    def create_report(self, conn, user_id, operator_name='test', report_name = datetime.now().strftime("%Y-%m-%d %H:%M:%S")):
         with conn.cursor() as cursor:
             # Generate timestamp-based report name
-            report_name = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # report_name = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             date_image_captured = datetime.now().date()
 
             # Insert the new report
