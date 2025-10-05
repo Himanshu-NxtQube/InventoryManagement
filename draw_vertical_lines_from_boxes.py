@@ -66,7 +66,8 @@ def _detect_boxes(roi):
 # Example usage:
 if __name__ == "__main__":
     # Replace with actual boxes from YOLO output
-    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0498.JPG"
+    # image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/new_testing2/DJI_0498.JPG"
+    image_path = "/run/media/cyrenix/Productive Things/Work/Box Counting Marico/Images/DJI_0558.jpg"
     image = cv2.imread(image_path)
     h, w, _ = image.shape
     # image = image[:, w//2:]

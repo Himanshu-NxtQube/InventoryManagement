@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import pymysql
+import logging
 from dotenv import load_dotenv
 from package.google_ocr import OCRClient
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -27,7 +28,16 @@ set_config(user_id)
 CONFIG = get_config()
 extras = CONFIG['extras']
 load_dotenv('package/.env')
+os.makedirs("logs", exist_ok=True)
 
+logging.basicConfig(
+    filename=f"logs/{time.strftime('%Y-%m-%d')}.log",
+    filemode="w",
+    level=logging.WARN,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
+logging.info("Processing images...")
 
 # Detection models
 boundary_detector = BoundaryDetector()
@@ -57,6 +67,8 @@ conn = pymysql.connect(
 
 
 def process_single_image(image_path, report_id):
+
+    util.check_image_resolution(image_path, 4032, 3024)
     
     start = time.time()
     with ThreadPoolExecutor(max_workers=4) as executor:
@@ -86,17 +98,19 @@ def process_single_image(image_path, report_id):
     # extracting rack_ids & unique_ids
     rack_dict, box_dict = rack_box_extractor.extract_ocr_info(annotations[1:], boundaries, dims)
 
+    print("\nBefore Rack dict:", rack_dict)
+
+    # infer missing rack ids
+    rack_dict = rack_quad_infer.infer_Q3_Q4(image_path, rack_dict)
+
+    print("\nAfter Rack dict:", rack_dict)
+    
+
     # FallBack Mechanism: if upper/lower bars fails then using rack id coordinates
     upper_line_y = int(rack_box_extractor.min_y)
     lower_line_y = int(rack_box_extractor.max_y)
     boundaries = left_line_x, right_line_x, upper_line_y, lower_line_y
 
-    print("\nBefore Rack dict:", rack_dict)
-
-    # infer missing rack ids
-    rack_dict = rack_quad_infer.infer_Q3_Q4(rack_dict)
-
-    print("\nAfter Rack dict:", rack_dict)
 
     # fetch all records
     records = data_fetcher.gather_all_records(box_dict, sys.argv[1])

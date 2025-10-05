@@ -1,11 +1,16 @@
 from package.config_loader import get_config
 from ultralytics import YOLO
+from package.error_buffer import ErrorBuffer
+from package.error_codes import ErrorCodes
+import logging
 import cv2
+import os
 
 class BoundaryDetector:
     def __init__(self):
         """Initializes the unified model and thresholds from the configuration."""
         self.CONFIG = get_config()
+        self.error_buffer = ErrorBuffer()
         self.model = YOLO(self.CONFIG['models']['boundary_model'])
         self.boundary_threshold = self.CONFIG['thresholds']['boundary_model']['confidence_threshold']
         self.merge_threshold = self.CONFIG['thresholds']['boundary_model']['merge_threshold']
@@ -100,3 +105,44 @@ class BoundaryDetector:
             if not merged or c - merged[-1] > min_distance:
                 merged.append(c)
         return merged
+    
+    def log_error_codes(self, image_path, boundaries, rack_dict):
+        left_line_x, right_line_x, upper_line_y, lower_line_y = boundaries
+
+        if left_line_x == 0:
+            # logging.warning(
+            #         "\n" + "-" * 50 +
+            #         f"\n⚠️  Left blue bar not detected."
+            #         f"\n   • Error Code : 101"
+            #         f"\n   • File       : {os.path.basename(image_path)}"
+            #         + "\n" + "-" * 50
+            #     )
+            self.error_buffer.add_error(image_path=image_path, error=ErrorCodes.LEFT_BLUE_BAR_NOT_DETECTED)
+        if right_line_x == 4032:
+            # logging.warning(
+            #         "\n" + "-" * 50 +
+            #         f"\n⚠️  Right blue bar not detected."
+            #         f"\n   • Error Code : 102"
+            #         f"\n   • File       : {os.path.basename(image_path)}"
+            #         + "\n" + "-" * 50
+            #     )
+            self.error_buffer.add_error(image_path=image_path, error=ErrorCodes.RIGHT_BLUE_BAR_NOT_DETECTED)
+        if upper_line_y == 0:
+            if 'Q3' in rack_dict.keys() and rack_dict['Q3'][6] != 'G':
+                # logging.warning(
+                #     "\n" + "-" * 50 +
+                #     f"\n⚠️  Upper orange bar not detected."
+                #     f"\n   • Error Code : 103"
+                #     f"\n   • File       : {os.path.basename(image_path)}"
+                #     + "\n" + "-" * 50
+                # )
+                self.error_buffer.add_error(image_path=image_path, error=ErrorCodes.UPPER_ORANGE_BAR_NOT_DETECTED)
+        if lower_line_y == 3024:
+            # logging.warning(
+            #     "\n" + "-" * 50 +
+            #     f"\n⚠️  Lower orange bar not detected."
+            #     f"\n   • Error Code : 104"
+            #     f"\n   • File       : {os.path.basename(image_path)}"
+            #     + "\n" + "-" * 50
+            # )
+            self.error_buffer.add_error(image_path=image_path, error=ErrorCodes.LOWER_ORANGE_BAR_NOT_DETECTED)

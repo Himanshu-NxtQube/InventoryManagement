@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import shutil
+import logging
 import pymysql
 from dotenv import load_dotenv
 from package.google_ocr import OCRClient
@@ -28,6 +29,17 @@ set_config(user_id)
 CONFIG = get_config()
 extras = CONFIG['extras']
 load_dotenv('package/.env')
+os.makedirs("logs", exist_ok=True)
+
+logging.basicConfig(
+    filename=f"logs/{time.strftime("%Y-%m-%d")}.log",
+    filemode="a",
+    level=logging.DEBUG,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
+
+logging.info("Processing images...")
 
 
 # Detection models
@@ -95,7 +107,7 @@ def process_single_image(image_path, report_id):
     print("\nBefore Rack dict:", rack_dict)
 
     # infer missing rack ids
-    rack_dict = rack_quad_infer.infer_Q3_Q4(rack_dict)
+    rack_dict = rack_quad_infer.infer_Q3_Q4(image_path, rack_dict)
 
     print("\nAfter Rack dict:", rack_dict)
 
