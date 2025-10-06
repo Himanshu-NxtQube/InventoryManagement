@@ -4,7 +4,7 @@ from package.config_loader import get_config
 CONFIG = get_config()
 _RACK_RE = re.compile(CONFIG['rack_id']['pattern'])
 
-def infer_Q3_Q4(rack_dict: dict) -> dict:
+def infer_Q3_Q4(image_path, rack_dict: dict) -> dict:
     # Filter only valid rack ids
     rack_dict = {k: v for k, v in rack_dict.items() if _RACK_RE.match(v)}
     # inv_rack_dict = {v: k for k, v in rack_dict.items()}

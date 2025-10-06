@@ -32,7 +32,7 @@ load_dotenv('package/.env')
 os.makedirs("logs", exist_ok=True)
 
 logging.basicConfig(
-    filename=f"logs/{time.strftime("%Y-%m-%d")}.log",
+    filename=f"logs/{time.strftime('%Y-%m-%d')}.log",
     filemode="a",
     level=logging.DEBUG,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -144,7 +144,7 @@ def process_single_image(image_path, report_id):
     print("\nRequired time: ", time.time() - start)
     
 
-is_threading = True
+is_threading = False
 def main():
     _dir = CONFIG['input']['image_dir']
     folders = [f for f in os.listdir(_dir) if os.path.isdir(os.path.join(_dir, f))]

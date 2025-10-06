@@ -13,5 +13,10 @@
     "name": "dhl_inventory",
     "user_id": 3,
     "config_path": "configs/dhl_inventory.yaml"
+  },
+  {
+    "name": "m&m_inventory",
+    "user_id": 12,
+    "config_path": "configs/m&m_inventory.yaml"
   }
 ]
