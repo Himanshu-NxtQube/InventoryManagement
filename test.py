@@ -193,6 +193,8 @@ def main():
             print("\nProcessing",image_file)
             if not image_file.lower().endswith(image_extensions):
                 continue
+            if image_file[4:8] != '0944':
+                continue
 
             image_path = os.path.join(image_directory,image_file)  
             process_single_image(image_path, report_id)

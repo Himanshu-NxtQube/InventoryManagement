@@ -1,5 +1,7 @@
 import regex
 from package.config_loader import get_config
+import matplotlib.pyplot as plt
+import cv2
 
 class RackBoxExtractor:
     def __init__(self):
@@ -173,7 +175,15 @@ class RackBoxExtractor:
         while i < n:
             annotation = annotations[i]
             text = annotation.description
+            if text[0] == '1':
+                text = 'I' + text[1:]
+            # print("text:",text)
 
+            if pattern.fullmatch(text):
+                center, area = self.compute_bbox([annotation.bounding_poly.vertices])
+                res.append({'rack_id':text, 'center': center, 'area': area})
+                continue
+            
             if len(text) >= exp_len:
                 text = text[:exp_len]
                 if pattern.fullmatch(text):
@@ -185,17 +195,31 @@ class RackBoxExtractor:
             match = pattern.match(text, partial=True)
             if match and match.partial:
                 # group_verts = list(annotation.bounding_poly.vertices)
-                group_verts = []
+                group_verts = [annotation.bounding_poly.vertices]
                 combined = text
                 j = i + 1
-                while len(combined) < exp_len and j < n:
+                while len(combined) < exp_len and j < n and not pattern.fullmatch(combined):
                     nxt = annotations[j]
                     combined += nxt.description.strip()
                     group_verts.append(nxt.bounding_poly.vertices)
+                    # print("combined",combined)
                     j += 1
                 combined = combined[:exp_len]
+                # print("After trim:",combined)
                 if pattern.fullmatch(combined):
                     center, area = self.compute_bbox(group_verts)
+                    # print('-'*15 + '\n')
+                    # print("FOUND:", combined)
+                    # print('\n' + '-'*15)
+                    res.append({'rack_id': combined, 'center': center, 'area': area})
+                    i = j
+                    continue
+                combined = combined[:-1]
+                if pattern.fullmatch(combined):
+                    center, area = self.compute_bbox(group_verts)
+                    # print('-'*15 + '\n')
+                    # print("FOUND:", combined)
+                    # print('\n' + '-'*15)
                     res.append({'rack_id': combined, 'center': center, 'area': area})
                     i = j
                     continue
@@ -205,6 +229,7 @@ class RackBoxExtractor:
             rack_id = rack_info['rack_id']
             text_center_x, text_center_y = rack_info['center']
             text_area = rack_info['area']
+            # print("Rack ID:",rack_id, text_center_x, text_center_y, text_area)
             
             if (left_line_x < text_center_x < right_line_x) and text_area > self.area_threshold:
                 # print("Rack id:", rack_id, "Area:", text_area)
@@ -296,10 +321,6 @@ class RackBoxExtractor:
 
             
     def compute_bbox(self, vertices):
-        """
-        vertices: list of {'x':float,'y':float} entries, can be many from merged annotations
-        returns: (center_x, center_y), area
-        """
         area = 0
         center_sum_x = 0
         center_sum_y = 0
@@ -313,11 +334,11 @@ class RackBoxExtractor:
             width = max_x - min_x
             height = max_y - min_y
             center = ((min_x + max_x) / 2, (min_y + max_y) / 2)
-            
+
             area += width * height
             center_sum_x += center[0]
             center_sum_y += center[1]
             count += 1
 
-        avg_center = (center_sum_x // count, center_sum_y // count) if count > 0 else (0, 0)
+        avg_center = (center_sum_x // count, center_sum_y // count) if count else (0, 0)
         return avg_center, area

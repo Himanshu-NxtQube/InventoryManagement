@@ -1,5 +1,5 @@
 models:
-  container_model: "./models/Marico_Pallet.pt"
+  container_model: "./models/M_and_M_pallet_model.pt"
   pallet_status_model: "./models/new pallet status model.pt"
   box_model: "./models/Marico Box Detection.pt"
   boundary_model: "./models/new_blue_orange_bar.pt"
@@ -9,14 +9,14 @@ bars:
   horizontal: 1
 
 rack_infer_func:
-  path: "package/infer functions/marico_infer_func.py"
+  path: "package/infer functions/m&m_infer_func.py"
 
 # pattern:
 #   rack_id: '^[A-Z]{2}[-\s]?[0-9]{3}$'
 
 rack_id:
-  pattern: '^([A-R])L([1-6])(\d{2})$'
-  expected_length: 5
+  pattern: '^[A-I](?:[1-9]|1[0-1])-R(?:[1-8])-[AB]$'
+  expected_length: 8
 
 input:
   image_dir: "./testing images/images/m&m"
@@ -31,7 +31,7 @@ thresholds:
     confidence_threshold: 0.2
   
   ocr_threshold:
-    area_threshold: 3000
+    area_threshold: 10000
   
   container_model:
     confidence_threshold: 0.7
