@@ -15,7 +15,7 @@ rack_infer_func:
 #   rack_id: '^[A-Z]{2}[-\s]?[0-9]{3}$'
 
 rack_id:
-  pattern: '^[A-O](?:[1-9]|1[0-1])-R(?:[1-8])-[AB]$'
+  pattern: '^[A-P](?:[1-9]|1[0-1])-R(?:[1-8])-[AB]$'
   expected_length: 8
 
 input:
