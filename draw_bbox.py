@@ -206,7 +206,7 @@ if __name__ == "__main__":
     save_output_path = "predictions"
     os.makedirs(save_output_path, exist_ok=True)
     model_path = "./models/new_blue_orange_bar.pt"
-    # model_path = "models/marico_pallet_!70.pt"
+    model_path = "models/chakan_pallet_newest.pt"
     model = YOLO(model_path)
     image_dir = "testing images/debug/"
     test_images = 'DJI_0107.JPG',
