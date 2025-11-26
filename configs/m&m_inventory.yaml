@@ -34,7 +34,7 @@ thresholds:
     area_threshold: 10000
   
   container_model:
-    confidence_threshold: 0.7
+    confidence_threshold: 0.5
     distance_threshold: 200
 
 unique_id:
