@@ -8,3 +8,4 @@ testing images/
 *.log
 __pycache__/
 inventory data/
+predictions/

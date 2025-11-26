@@ -190,10 +190,10 @@ def main():
             pool.map(process_single_image_safe, image_paths)
     else:
         for image_file in image_files:
+            if image_file[4:8] != '0107':
+                continue
             print("\nProcessing",image_file)
             if not image_file.lower().endswith(image_extensions):
-                continue
-            if image_file[4:8] != '0944':
                 continue
 
             image_path = os.path.join(image_directory,image_file)  

@@ -16,7 +16,7 @@ class RackBoxExtractor:
         self.center_y = dims[1]/2
         self.min_x_threashold = dims[0] * 0.05
         self.max_x_threashold = dims[0] * 0.95
-        self.max_y_limit = dims[1] - dims[1]*0.15
+        self.max_y_limit = dims[1] - dims[1]*0.05
         rack_dict = self.extract_rack_info(annotations, boundaries)
         box_dict = self.extract_box_info(annotations, boundaries)
 
@@ -91,7 +91,8 @@ class RackBoxExtractor:
                     if combined[0] != '@':
                         combined = '@' + combined[1:]
                     uids[combined.upper()] = (center_x, center_y)
-
+            # else:
+                # print("Annotation (outside):", current)
             i += 1
 
         print(uids)

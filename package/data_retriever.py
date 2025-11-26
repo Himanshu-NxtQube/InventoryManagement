@@ -124,24 +124,25 @@ class RDSDataFetcher:
         """Main logic for matching with closeness check first in row-data."""
 
         # Step 2: Try dispatches first
-        dispatched_info = self._get_box_dispatch_info(input_unique_id, user_id)
+        # dispatched_info = self._get_box_dispatch_info(input_unique_id, user_id)
         row_data_info = self._get_latest_row(input_unique_id, user_id)
 
-        if dispatched_info:
-            dispatched_box_quantity = int(dispatched_info['box_quantity'])
-            dispatched_box_number = int(dispatched_info['box_number'])
+        # if dispatched_info:
+        #     dispatched_box_quantity = int(dispatched_info['box_quantity'])
+        #     dispatched_box_number = int(dispatched_info['box_number'])
 
 
-            #print("\n\nDispatched info:", dispatched_info)
-            row_data_info['box_quantity'] = int(row_data_info['box_quantity']) - dispatched_box_quantity
-            row_data_info['box_number'] = int(row_data_info['box_number']) - dispatched_box_number
+        #     #print("\n\nDispatched info:", dispatched_info)
+        #     row_data_info['box_quantity'] = int(row_data_info['box_quantity']) - dispatched_box_quantity
+        #     row_data_info['box_number'] = int(row_data_info['box_number']) - dispatched_box_number
 
-            return row_data_info
+        #     return row_data_info
         
-        elif row_data_info:
-            return row_data_info
+        # elif row_data_info:
+        #     return row_data_info
 
-        return None
+        # return None
+        return row_data_info
     
     def gather_all_records(self, box_dict, user_id):
         records = []

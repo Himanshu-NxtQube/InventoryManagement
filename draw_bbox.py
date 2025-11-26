@@ -62,6 +62,7 @@
 from ultralytics import YOLO
 import cv2
 import numpy as np
+import os
 # from package.depth_estimation import DepthEstimator
 
 # depth_estimator = DepthEstimator("depth_anything_v2")
@@ -153,8 +154,7 @@ class BoundaryDetector:
         return merged
 
 
-def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge_threshold=20, save_path=None):
-    model = YOLO(model_path)
+def visualize_boundaries(model, image_path, confidence_threshold=0.5, merge_threshold=20, save_path=None):
     image = cv2.imread(image_path)
     # h, w, _  = image.shape
     # left_image = image[:, :w//2]
@@ -177,10 +177,10 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         
         # Choose color based on class (0=blue, 1=orange)
-        color = (255, 0, 0) if cls == 0 else (0, 165, 255)  # Blue for class 0, Orange for class 1
+        color = (0, 0, 255) if cls == 0 else (0, 165, 255)  # Blue for class 0, Orange for class 1
         
         # Draw bounding box
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, 5)
         
         # Add confidence label
         label = f"{model.names[cls]}: {conf:.2f}"
@@ -194,21 +194,26 @@ def visualize_boundaries(model_path, image_path, confidence_threshold=0.5, merge
 
     # Optionally save the image
     if save_path:
-        cv2.imwrite(save_path, image)
-        print(f"Saved annotated image to {save_path}")
+        dest = os.path.join(save_path, os.path.basename(image_path))
+        cv2.imwrite(dest, image)
+        print(f"Saved annotated image to {dest}")
 
 
 # ============================
 # 🔧 Example usage (edit here)
 # ============================
 if __name__ == "__main__":
-    # model_path = "./models/Mahindra_orange_blue.pt"
-    model_path = "./models/Maricobox.pt"
-    image_path = "/run/media/cyrenix/Productive Things/Work/Marico Inventory code/images/test/DJI_0144.JPG"
-    # image_path = "./testing images/debug/DJI_0498.JPG"
-    confidence = 0
-    merge_dist = 50
-    save_output_path = "output_with_boundaries.jpg"
-
-    visualize_boundaries(model_path, image_path, confidence, merge_dist, save_output_path)
+    save_output_path = "predictions"
+    os.makedirs(save_output_path, exist_ok=True)
+    model_path = "./models/new_blue_orange_bar.pt"
+    # model_path = "models/marico_pallet_!70.pt"
+    model = YOLO(model_path)
+    image_dir = "testing images/debug/"
+    test_images = 'DJI_0107.JPG',
+    for image in os.listdir(image_dir):
+        if image in test_images:
+            image_path = os.path.join(image_dir, image)
+            confidence = 0
+            merge_dist = 50
+            visualize_boundaries(model, image_path, confidence, merge_dist, save_output_path)
 
