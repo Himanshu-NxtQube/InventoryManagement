@@ -1,5 +1,5 @@
 models:
-  container_model: "./models/mahindra_and_mahindra_pallet_model.pt"
+  container_model: "./models/Mahindra_and_mahindra_final_pallet_model.pt"
   pallet_status_model: "./models/new pallet status model.pt"
   box_model: "./models/Marico Box Detection.pt"
   boundary_model: "./models/new_blue_orange_bar.pt"
