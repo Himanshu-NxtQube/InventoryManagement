@@ -205,11 +205,11 @@ def visualize_boundaries(model, image_path, confidence_threshold=0.5, merge_thre
 if __name__ == "__main__":
     save_output_path = "predictions"
     os.makedirs(save_output_path, exist_ok=True)
-    model_path = "./models/new_blue_orange_bar.pt"
-    model_path = "models/chakan_pallet_newest.pt"
+    # model_path = "./models/new_blue_orange_bar.pt"
+    model_path = "./models/mahindra_and_mahindra_pallet_model.pt"
     model = YOLO(model_path)
     image_dir = "testing images/debug/"
-    test_images = 'DJI_0107.JPG',
+    test_images = ['DJI_0057.JPG', 'DJI_0086.JPG', 'DJI_0115.JPG', 'DJI_0954.JPG', 'DJI_0956.JPG', 'DJI_0957.JPG']
     for image in os.listdir(image_dir):
         if image in test_images:
             image_path = os.path.join(image_dir, image)
