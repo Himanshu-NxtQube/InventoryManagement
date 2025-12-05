@@ -135,7 +135,7 @@ def process_single_image(image_path, report_id):
     # print(exclusions)
 
     # print the final json result
-    print_json(image_path, dims, rack_dict, records, mapping_info, exclusions, pallet_status=pallet_status, box_counts=box_counts, stack_counts=stack_counts)
+    print_json(image_path, dims, rack_dict, records, mapping_info, exclusions, user_id, pallet_status=pallet_status, box_counts=box_counts, stack_counts=stack_counts)
 
     # TODO: tidy up this process (i.e. storing this data to RDS ) and arguments
     # storing result in RDS process
@@ -190,8 +190,8 @@ def main():
             pool.map(process_single_image_safe, image_paths)
     else:
         for image_file in image_files:
-            if image_file[4:8] != '0107':
-                continue
+            # if image_file[4:8] != '0107':
+            #     continue
             print("\nProcessing",image_file)
             if not image_file.lower().endswith(image_extensions):
                 continue

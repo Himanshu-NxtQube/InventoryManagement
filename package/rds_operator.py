@@ -45,7 +45,7 @@ class RDSOperator:
         
         
     def store_data_to_RDS(self, image_path, conn, user_id, image_obj_key_id, report_id, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status=None, box_counts=None, stack_counts=None):
-        final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status, box_counts, stack_counts)
+        final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, user_id, pallet_status, box_counts, stack_counts)
 
         
 
@@ -66,7 +66,7 @@ class RDSOperator:
                         existing = False
 
                     # is_non_conformity = True if row['EXCLUSION'][:5] == "There" else False
-                    is_non_conformity = row['EXCLUSION'] not in ("empty rack", "")
+                    is_non_conformity = row['EXCLUSION'] not in ("empty rack", "", "Predicted")
                     status = None if 'STATUS' not in row.keys() else 'filled' if row['STATUS'] == 'full' else row['STATUS']
 
                     if existing:

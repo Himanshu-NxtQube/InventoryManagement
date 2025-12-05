@@ -2,10 +2,10 @@ import os
 import csv
 import json
 from package.s3_operator import upload_images
+from package.correction import make_correction
 
 
-
-def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status, box_counts, stack_counts):
+def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, user_id, pallet_status, box_counts, stack_counts):
     final_output = []
     image_name = os.path.basename(image_path)
 
@@ -77,7 +77,7 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
             temp_output['BOXQUANTITY'] = result['box_quantity']
             temp_output['PARTNUMBER'] = result['part_number']
             temp_output['INVOICE_NUMBER'] = result['invoice_number']
-
+        
         final_output.append(temp_output)
 
     if not left_rack:
@@ -117,10 +117,11 @@ def build_json_result(image_path, img_dims, rack_dict, records, mapping_info, ex
             #     temp_output['STATUS'] = pallet_status[1]
         final_output.append(temp_output)
 
+    final_output = make_correction(user_id, final_output)
     return final_output
 
-def print_json(image_path, img_dims, rack_dict, records, mapping_info, exclusions, csv_output=True, pallet_status=None, box_counts=None, stack_counts=None):
-    final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, pallet_status, box_counts, stack_counts)
+def print_json(image_path, img_dims, rack_dict, records, mapping_info, exclusions, user_id, csv_output=True, pallet_status=None, box_counts=None, stack_counts=None):
+    final_output = build_json_result(image_path, img_dims, rack_dict, records, mapping_info, exclusions, user_id, pallet_status, box_counts, stack_counts)
     json_obj = json.dumps(final_output, indent=4)
     print(json_obj)
     if csv_output:

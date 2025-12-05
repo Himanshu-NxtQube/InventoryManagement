@@ -13,8 +13,8 @@ conn = pymysql.connect(
 
 
 with conn.cursor() as cursor:
-    query = "select count(*) from `inferances` where userId = 1 and DATE(updatedAt) = '2025-08-13' and exclusion = 'No Rack ID found' and isDeleted = false and isDispatched = false and reportId = 849;"
-    cursor.execute(query)
-    res = cursor.fetchall()[-1:]
+    query = "SELECT uniqueId, box_quantity, rack_location, isDispatched FROM `row-data` WHERE rack_location = %s ORDER BY id DESC LIMIT 1;"
+    cursor.execute(query, ('I11R5B'))
+    res = cursor.fetchall()
     for row in res:
         print(row)
