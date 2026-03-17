@@ -23,5 +23,10 @@
     "name": "m&m_inventory-v2",
     "user_id": 13,
     "config_path": "configs/m&m_inventory-v2.yaml"
+  },
+  {
+    "name": "mahindra_logistics_demo",
+    "user_id": 20,
+    "config_path": "configs/mahindra_logistics_demo.yaml"
   }
 ]
